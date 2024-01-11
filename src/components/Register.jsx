@@ -3,75 +3,76 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 const RegisterPageContainer = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
- height: 100vh;
- background-color: #f8f9fa;
-`;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('https://media.giphy.com/media/3o7bujnKrJCz2k7pW8/giphy.gif') no-repeat center center fixed;
+  background-size:cover`;
+  
 
 const RegisterForm = styled.form`
- background-color: #fff;
- border-radius: 10px;
- box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
- padding: 30px;
- width: 400px; /* Increased width for additional fields */
- text-align: center;
+  background-color: rgba(255, 255, 255, 0.8); /* Add an overlay to make the form readable */
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 400px; /* Increased width for additional fields */
+  text-align: center;
 `;
 
 const Input = styled.input`
- width: 100%;
- padding: 12px;
- margin-bottom: 20px;
- border: 1px solid #ddd;
- border-radius: 5px;
- font-size: 16px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
 `;
 
 const Button = styled.button`
- width: 100%;
- padding: 15px;
- background: linear-gradient(to right, #fc4a1a, #f7b733);
- color: #fff;
- border: none;
- border-radius: 5px;
- font-size: 18px;
- cursor: pointer;
- transition: background 0.3s ease-in-out;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to right, #fc4a1a, #f7b733);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
 
- &:hover {
+  &:hover {
     background: linear-gradient(to right, #fc4a1a, #f7b733);
- }
+  }
 `;
 
 const LoginLink = styled.span`
- color: #333;
- font-size: 14px;
- margin-top: 10px;
- display: block;
+  color: #333;
+  font-size: 14px;
+  margin-top: 10px;
+  display: block;
 
- a {
+  a {
     color: #007bff;
     text-decoration: none;
     font-weight: bold;
- }
+  }
 `;
 
 const Register = () => {
- const [name, setName] = useState('');
- const [email, setEmail] = useState('');
- const [createPassword, setCreatePassword] = useState('');
- const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [createPassword, setCreatePassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
- const handleRegister = async () => {
+  const handleRegister = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/register', {
-        username: name,
+      const response = await axios.post('http://localhost:3000/api/register', {
+        name,
         email,
         password: createPassword,
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
         console.log('Registration successful:', data.message);
@@ -82,9 +83,9 @@ const Register = () => {
     } catch (error) {
       console.error('Error during registration:', error);
     }
- };
+  };
 
- return (
+  return (
     <RegisterPageContainer>
       <RegisterForm>
         <h2 style={{ color: '#333' }}>Register</h2>

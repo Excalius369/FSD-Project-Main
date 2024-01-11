@@ -6,34 +6,37 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
 
-const shoes = [ { id: 1, name: 'BLAZER MID 77 VINTAGE BLACK/WHITE', brandname: 'NIKE', <image src={require('./a+')} />},
+const shoes = [
+  { id: 1, name: 'BLAZER MID 77 VINTAGE BLACK/WHITE', brandname: 'NIKE', image:'https://www.superkicks.in/cdn/shop/products/2_c6dce12d-8d76-475d-8800-866449fb6810.jpg?v=1675958421&width=360'},
   { id: 2, name: 'Running Shoes', brandname: 'ADIDAS', image: 'https://www.superkicks.in/cdn/shop/files/2_90.jpg?v=1698918266&width=360' },
   { id: 3, name: 'High-Top Boots', brandname: 'PUMA', image: 'https://www.superkicks.in/cdn/shop/files/2_17c54df1-1f88-44eb-8cec-6937384d5fe3.jpg?v=1694511351&width=360' },
-  { id: 4, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
+  { id: 4, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/1-2023-12-01T134120.609.jpg?v=1701418320&width=600' },
   { id: 5, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
   { id: 6, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
   { id: 7, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
   { id: 8, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
   { id: 9, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
-  { id: 10, name: 'Casual Footwear', brandname: 'REEBOK', image: 'https://www.superkicks.in/cdn/shop/files/2_26117081-4444-4d08-a0a0-b546c2e0aff5.jpg?v=1700634080&width=360' },
 
-  // Add more shoe data as needed...
-
-
-  // Your shoe data...
 ];
 
-const StyledCard = styled(motion.div)`
+const StyledCard = styled(motion(Card))`
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px; /* Pebble corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
   height: 200px;
   object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -79,7 +82,7 @@ const ProductCard = ({ shoe }) => {
   const [isHovered, setHovered] = useState(false);
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
+    <Grid item xs={12} sm={6} md={4} >
       <CardLink to={`/product/${shoe.id}`}>
         <StyledCard
           variants={cardVariants}

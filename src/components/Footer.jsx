@@ -13,7 +13,7 @@ import { faGooglePay, faCcAmazonPay, faApplePay, faCcVisa } from '@fortawesome/f
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #001F3F; /* Updated color palette to match the navbar */
   color: white;
   padding: 40px;
