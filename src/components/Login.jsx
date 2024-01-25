@@ -17,7 +17,7 @@ const LoginPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: url('https://media.giphy.com/media/JrGPjF4k9pTvGViwAe/giphy.gif') no-repeat center center fixed;
+  background: url('https://images.unsplash.com/photo-1628558422453-576457df4b0d?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
   background-size: cover;
 `;
 

@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { addProduct } from "../redux/cartRedux";
 import { useDispatch } from "react-redux";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 // Styled components for better organization
 const Container = styled.div`
@@ -138,8 +139,8 @@ const QuantityButton = styled.button`
 const AddToCartButton = styled.button`
   font-size: 18px;
   font-weight: bold;
-  color: #fff;
-  background-color: #333;
+  color: #fff ;
+  background-color: black;
   padding: 12px 24px;
   border: none;
   border-radius: 5px;
@@ -346,7 +347,7 @@ const ProductPage = () => {
             </QuantityContainer>
             
             {/* Add to Cart button */}
-            <AddToCartButton onClick={handleClick}>Add to Cart</AddToCartButton>
+            <AddToCartButton startIcon={<AddShoppingCartIcon />} onClick={handleClick} >Add to Cart</AddToCartButton>
             <StockCount>Stock: {product.stock} left</StockCount>
           </ProductInfo>
         </ProductWrapper>

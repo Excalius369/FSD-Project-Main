@@ -2,7 +2,7 @@ import React, { useState, forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
 
@@ -107,8 +107,8 @@ const ProductCard = ({ shoe }) => {
               <IconButton>
                 <FavoriteBorderOutlinedIcon style={{ color: '#ff4e50' }} />
               </IconButton>
-              <Button variant="contained" color="primary" startIcon={<AddShoppingCartIcon />} style={{ borderRadius: '20px', marginTop: '8px' }}>
-                Add to Cart
+              <Button variant="contained" color="primary"  style={{ borderRadius: '20px', marginTop: '8px' }}>
+                View Product
               </Button>
             </div>
           </StyledCardContent>

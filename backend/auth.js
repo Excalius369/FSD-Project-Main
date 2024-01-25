@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../backend/models/user');
+const User = require('../backend/models/user');  // Update this line
 
 router.post('/login', async (req, res) => {
   try {
@@ -41,3 +41,4 @@ router.post('/api/auth/register', async (req, res) => {
 });
 
 module.exports = router;
+

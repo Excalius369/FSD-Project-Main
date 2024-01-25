@@ -1,4 +1,3 @@
-// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -8,9 +7,18 @@ import ProductPage from './components/ProductPage';
 import Layout from './components/Layout';
 import Footwear from './components/Footwear';
 import Cart from './components/Cart';
-
+import ProfilePage from './components/ProfilePage'; // Import ProfilePage component
+import SneakerCare from './components/SneakerCare';
 
 const App = () => {
+  // Define dummy user data
+  const user = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    address: '123 Main Street, City, Country',
+    // Add more user details as needed
+  };
+
   return (
     <Router>
       <Routes>
@@ -18,8 +26,11 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/product/:id" element={<Layout><ProductPage /></Layout>} />
+        {/* Pass user data to ProfilePage component */}
+        <Route path="/profile" element={<Layout><ProfilePage user={user} /></Layout>} />
+        <Route path="/sneakercare" element={<Layout><SneakerCare/></Layout>} />
         <Route path="/footwears" element={<Layout><Footwear /></Layout>} />
-        <Route path="/cart" element={<Layout><Cart /></Layout>} /> {/* Add this line for the cart page */}
+        <Route path="/cart" element={<Layout><Cart /></Layout>} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

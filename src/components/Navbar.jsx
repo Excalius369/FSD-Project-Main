@@ -8,8 +8,8 @@ import {
   Menu,
   AccountCircle,
   LocalMall,
-  SportsSoccer,
   NewReleases,
+  LocalOffer,
 } from '@mui/icons-material';
 import { Badge, MenuItem } from '@mui/material';
 
@@ -125,7 +125,7 @@ const Dropdown = styled.div`
   left: -10px;
   background-color: #ffffff;
   border: 1px solid #ffd700;
-  border-radius: 4px;
+  border-radius: 20px; /* Rounded corners */
   padding: 10px;
   display: ${(props) => (props.$show ? 'block' : 'none')};
   z-index: 3;
@@ -206,6 +206,10 @@ const Navbar = () => {
     setShowMenu(!showMenu);
   };
 
+  const handleDropdownItemClick = () => {
+    setShowMenu(false); // Close the dropdown when a dropdown item is clicked
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -228,7 +232,6 @@ const Navbar = () => {
           <RegisterButton to="/register">Register</RegisterButton>
           <LoginButton to="/login">Login</LoginButton>
           <Link to="/cart">
-            {/* Use MenuItem here */}
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
                 <ShoppingCartOutlined />
@@ -238,30 +241,25 @@ const Navbar = () => {
         </Right>
       </Wrapper>
       <Dropdown $show={showMenu}>
-        <DropdownItem to="/profile">
+        <DropdownItem to="/profile" onClick={handleDropdownItemClick}>
           <IconWrapper>
             <AccountCircle />
           </IconWrapper>
           Profile
         </DropdownItem>
-        <DropdownItem to="/merch">
+        <DropdownItem to="/sneakercare" onClick={handleDropdownItemClick}>
           <IconWrapper>
             <LocalMall />
           </IconWrapper>
-          SoleRush Merch
+          Sneaker Care
         </DropdownItem>
-        <DropdownItem to="/footwears">
+        <DropdownItem to="/footwears" onClick={handleDropdownItemClick}>
           <IconWrapper>
-            <SportsSoccer />
+            <LocalOffer />
           </IconWrapper>
           Footwears
         </DropdownItem>
-        <DropdownItem to="/new-arrivals">
-          <IconWrapper>
-            <NewReleases />
-          </IconWrapper>
-          New Arrivals
-        </DropdownItem>
+       
       </Dropdown>
     </Container>
   );

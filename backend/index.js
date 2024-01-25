@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-mongoose.connect("mongodb+srv://abhinavms:31211@cluster0.xnw7ryr.mongodb.net/shop?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://abhinavms:abhinavms@cluster0.xnw7ryr.mongodb.net/shop?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'Connection Error'));
@@ -24,14 +24,14 @@ app.use(express.json());
 const authRoutes = require('./auth');
 app.use('/api/auth', authRoutes);
 
+// Serve static files from the 'build' directory
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.use(express.static('build'));
-
-app.get('/*', (req, res) => {
+// Catch-all route for serving 'index.html'
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-
 app.listen(port, () => {
-    console.log(`Server is up and it is running on port ${port}`);
+    console.log(`Server is up and running on port ${port}`);
 });
