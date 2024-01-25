@@ -229,9 +229,9 @@ const ModalImage = styled.img`
 
 // Define the size options
 const sizeOptions = [
-  { value: "size-5", label: "Size 5" },
-  { value: "size-6", label: "Size 6" },
-  { value: "size-7", label: "Size 7" },
+  { value: "size-5", label: "6" },
+  { value: "size-6", label: "7" },
+  { value: "size-7", label: "8" },
   // Add more size options as needed...
 ];
 
@@ -248,7 +248,7 @@ const ProductPage = () => {
     name: 'BLAZER MID 77 VINTAGE BLACK/WHITE',
     brandname: 'NIKE',
     model: 'Blazer Mid 77 Vintage',
-    price: 8000,
+    price: 15000,
     images: [
       'https://www.superkicks.in/cdn/shop/products/2_c6dce12d-8d76-475d-8800-866449fb6810.jpg?v=1675958421&width=360',
       // Add more image URLs as needed...

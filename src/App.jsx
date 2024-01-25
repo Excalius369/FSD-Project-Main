@@ -9,6 +9,7 @@ import Footwear from './components/Footwear';
 import Cart from './components/Cart';
 import ProfilePage from './components/ProfilePage'; // Import ProfilePage component
 import SneakerCare from './components/SneakerCare';
+import ContactUs from './components/ContactUs';
 
 const App = () => {
   // Define dummy user data
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/profile" element={<Layout><ProfilePage user={user} /></Layout>} />
         <Route path="/sneakercare" element={<Layout><SneakerCare/></Layout>} />
         <Route path="/footwears" element={<Layout><Footwear /></Layout>} />
+        <Route path="/contact-us" element={<Layout><ContactUs/></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         {/* Add more routes as needed */}
       </Routes>

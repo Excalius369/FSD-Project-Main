@@ -1,6 +1,6 @@
-// Footer.jsx
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
@@ -93,7 +93,15 @@ const List = styled.ul`
 const ListItem = styled.li`
   margin-bottom: 10px;
   font-size: 16px;
+  color: white; /* Set text color to white */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+
+  &:hover {
+    text-decoration: none; /* Remove underline on hover */
+  }
 `;
+
 
 const Right = styled.div`
   flex: 1;
@@ -139,12 +147,11 @@ const Footer = () => {
       <Center>
         <Title>Explore</Title>
         <List>
-          <ListItem>Home</ListItem>
-          <ListItem>Shop</ListItem>
-          <ListItem>Mens Sneakers</ListItem>
-          <ListItem>Womens Sneakers</ListItem>
-          <ListItem>New Arrivals</ListItem>
-          <ListItem>Sale</ListItem>
+          <ListItem><Link to="/">Home</Link></ListItem>
+          <ListItem><Link to="/shop">Shop</Link></ListItem>
+          <ListItem><Link to="/sneakercare">Sneaker Care</Link></ListItem>
+          <ListItem><Link to="/footwear">Footwear</Link></ListItem>
+          <ListItem><Link to="/contact-us">Contact Us</Link></ListItem>
         </List>
       </Center>
       <Right>
