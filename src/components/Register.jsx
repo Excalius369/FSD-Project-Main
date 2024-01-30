@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPageContainer = styled.div`
   display: flex;
@@ -8,15 +9,15 @@ const RegisterPageContainer = styled.div`
   align-items: center;
   height: 100vh;
   background: url('https://media.giphy.com/media/3o7bujnKrJCz2k7pW8/giphy.gif') no-repeat center center fixed;
-  background-size:cover`;
-  
+  background-size: cover;
+`;
 
 const RegisterForm = styled.form`
-  background-color: rgba(255, 255, 255, 0.8); /* Add an overlay to make the form readable */
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  width: 400px; /* Increased width for additional fields */
+  width: 400px;
   text-align: center;
 `;
 
@@ -63,20 +64,31 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [createPassword, setCreatePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async () => {
+    if (!name || !email || !createPassword || !confirmPassword) {
+      alert('Please fill all the required fields.');
+      return;
+    }
+
+    if (createPassword !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:3000/api/register', {
-        name,
+      const response = await axios.post('http://localhost:3000/api/auth/register', {
+        username: name,
         email,
         password: createPassword,
       });
-
+  
       const data = response.data;
-
+  
       if (data.success) {
-        console.log('Registration successful:', data.message);
-        // Redirect or perform other actions after successful registration
+        alert('Registration successful!');
+        navigate('/login');
       } else {
         console.error('Registration failed:', data.message);
       }

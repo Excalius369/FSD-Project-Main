@@ -231,13 +231,13 @@ const Navbar = () => {
         <Right>
           <RegisterButton to="/register">Register</RegisterButton>
           <LoginButton to="/login">Login</LoginButton>
-          <Link to="/cart">
+          <CartLink to="/cart">
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
-                <ShoppingCartOutlined />
+                <ShoppingCartOutlined style={{ color: 'white' }} /> {/* Change color to white */}
               </Badge>
             </MenuItem>
-          </Link>
+          </CartLink>
         </Right>
       </Wrapper>
       <Dropdown $show={showMenu}>

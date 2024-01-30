@@ -148,10 +148,11 @@ const Footer = () => {
         <Title>Explore</Title>
         <List>
           <ListItem><Link to="/">Home</Link></ListItem>
-          <ListItem><Link to="/shop">Shop</Link></ListItem>
+
           <ListItem><Link to="/sneakercare">Sneaker Care</Link></ListItem>
-          <ListItem><Link to="/footwear">Footwear</Link></ListItem>
+          <ListItem><Link to="/footwears">Footwear</Link></ListItem>
           <ListItem><Link to="/contact-us">Contact Us</Link></ListItem>
+          <ListItem><Link to="/about">About</Link></ListItem>
         </List>
       </Center>
       <Right>

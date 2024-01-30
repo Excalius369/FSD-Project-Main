@@ -76,7 +76,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,12 +86,17 @@ const Login = () => {
           password,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (data.success) {
-        console.log('Login successful:', data.message);
-        // Redirect or perform other actions after successful login
+        if (data.isAdmin) {
+          // Redirect admin to admin page
+          window.location.href = '/dashboard'; // Change the URL to your admin page
+        } else {
+          // Redirect normal user to homepage
+          window.location.href = '/'; // Change the URL to your homepage
+        }
       } else {
         console.error('Login failed:', data.message);
       }
@@ -99,6 +104,8 @@ const Login = () => {
       console.error('Error during login:', error);
     }
   };
+  
+  
 
   return (
     <LoginPageContainer>

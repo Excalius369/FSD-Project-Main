@@ -1,14 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../backend/models/user');  // Update this line
+const User = require('../backend/models/user');
+const bcrypt = require('bcrypt');
 
+// Login route
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    // Check if the user is an admin
+    if (username === 'admin' && password === '789456123') {
+      // Redirect admin to admin page
+      return res.status(200).json({ success: true, isAdmin: true });
+    }
+
     const user = await User.findOne({ username });
 
-    if (user && await user.comparePassword(password)) {
-      res.status(200).json({ success: true, message: 'Welcome User' });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    // Compare passwords using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (isPasswordValid) {
+      res.status(200).json({ success: true, isAdmin: false });
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -18,7 +34,10 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/api/auth/register', async (req, res) => {
+
+
+// Registration route
+router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
@@ -30,7 +49,10 @@ router.post('/api/auth/register', async (req, res) => {
       return res.status(409).json({ success: false, message: 'Email already in use.' });
     }
 
-    const newUser = new User({ username, email, password });
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ success: true, message: 'User registered successfully.' });
@@ -40,5 +62,5 @@ router.post('/api/auth/register', async (req, res) => {
   }
 });
 
-module.exports = router;
 
+module.exports = router;
