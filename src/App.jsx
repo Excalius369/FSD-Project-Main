@@ -11,6 +11,9 @@ import ProfilePage from './components/ProfilePage'; // Import ProfilePage compon
 import SneakerCare from './components/SneakerCare';
 import ContactUs from './components/ContactUs';
 import Dashboard from '../admin/components/Dashboard';
+import AddProduct from '../admin/components/AddProduct';
+import ProductManagement from '../admin/components/ProductManagement';
+import UserManagement from '../admin/components/UserManagement';
 
 const App = () => {
   // Define dummy user data
@@ -35,6 +38,9 @@ const App = () => {
         <Route path="/contact-us" element={<Layout><ContactUs/></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/user-management" element={<UserManagement/>} />
+        <Route path="/product-management" element={<ProductManagement/>} />
+        <Route path="/add-product" element={<AddProduct/>} />
       </Routes>
     </Router>
   );

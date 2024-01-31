@@ -24,6 +24,12 @@ app.use(express.json());
 const authRoutes = require('./auth');
 app.use('/api/auth', authRoutes);
 
+const userRoute = require("./routes/user"); // Move this line after defining `app`
+app.use("/api/user", userRoute);
+
+const productRoute = require("./routes/product"); // Move this line after defining `app`
+app.use("/api/products", productRoute);
+
 // Serve static files from the 'build' directory
 app.use(express.static(path.join(__dirname, 'build')));
 

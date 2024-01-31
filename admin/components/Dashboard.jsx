@@ -1,62 +1,86 @@
-// Dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ProductManagement from './ProductManagement'; // Import the ProductManagement component
+import { FiUsers, FiBox, FiHome } from 'react-icons/fi'; // Import Feather icons
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
-// Styled components with visually polished styles
+const palette = {
+  purple: '#5E548E',
+  green: '#9BC400',
+  peach: '#FFB07C',
+  yellow: '#FFD878',
+  grey: '#F7F7F7',
+  black: '#000'
+};
+
 const DashboardContainer = styled.div`
+  background: linear-gradient(to right, ${palette.purple}, ${palette.green});
   display: flex;
-  background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
 `;
 
 const Sidebar = styled.div`
   flex: 1;
-  background: #333; 
   padding: 2rem;
-  min-height: 100vh; /* Adjusted to fill entire viewport height */
+  min-height: 100vh;
+  background: ${palette.purple};
 `;
 
 const Content = styled.div`
+  background: ${palette.grey};
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   flex: 5;
   padding: 2rem;
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
 `;
 
 const Title = styled.h2`
   font-size: 2rem;
-  color: #fff;
+  color: ${palette.yellow};
   margin-bottom: 1rem;
 `;
 
-const OptionLink = styled.a`
-  display: block;
+const OptionLink = styled(Link)`
+  display: flex;
+  align-items: center;
   font-size: 1.1rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   margin-bottom: 0.5rem;
   
   &:hover {
     color: #fff;
-  } 
+  }
 `;
 
-// Icon components
-const UserIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-);
+const Icon = styled.span`
+  margin-right: 1rem;
+`;
 
-const ProductIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>  
-);
+const Card = styled.div`
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 1.5rem;
+  color: ${palette.purple};
+  margin-bottom: 1rem;
+`;
+
+const CardContent = styled.div`
+  font-size: 1.2rem;
+  color: ${palette.black};
+`;
 
 const AdminDashboard = () => {
-  const [currentPage, setCurrentPage] = useState('dashboard'); // Use state to track the current page
-  const [userStats, setUserStats] = useState(0); // State to store total number of users
-  const [productStats, setProductStats] = useState(0); // State to store total number of products
+  const [userStats, setUserStats] = useState(null); // Changed initial value to null
+  const [productStats, setProductStats] = useState(null); // Changed initial value to null
 
-  // Fetch user statistics and product statistics
   useEffect(() => {
     fetchUserStatistics();
     fetchProductStatistics();
@@ -64,10 +88,9 @@ const AdminDashboard = () => {
 
   const fetchUserStatistics = async () => {
     try {
-      // Fetch user statistics from your backend API
-      // Example: const response = await fetch('your-backend-api-url/users/stats');
-      // Example: const data = await response.json();
-      // Example: setUserStats(data.totalUsers);
+      const response = await fetch('http://localhost:3000/api/user/count');
+      const data = await response.json();
+      setUserStats(data.count); // Update state with user count
     } catch (error) {
       console.error('Error fetching user statistics:', error);
     }
@@ -75,10 +98,9 @@ const AdminDashboard = () => {
 
   const fetchProductStatistics = async () => {
     try {
-      // Fetch product statistics from your backend API
-      // Example: const response = await fetch('your-backend-api-url/products/stats');
-      // Example: const data = await response.json();
-      // Example: setProductStats(data.totalProducts);
+      const response = await fetch('http://localhost:3000/api/product/count');
+      const data = await response.json();
+      setProductStats(data.count); // Update state with product count
     } catch (error) {
       console.error('Error fetching product statistics:', error);
     }
@@ -87,34 +109,33 @@ const AdminDashboard = () => {
   return (
     <DashboardContainer>
       <Sidebar>
-        <Title>
-          <OptionLink href="#" onClick={() => setCurrentPage('dashboard')}>
-            Admin Dashboard
-          </OptionLink>
-        </Title>
-      
-        <OptionLink href="#user-management">
-          <UserIcon />
-          User Management
+        <Title>Admin Dashboard</Title>
+        <OptionLink to="/dashboard">
+          <Icon><FiHome /></Icon>
+          Home
         </OptionLink>
-        
-        <OptionLink href="#product-management" onClick={() => setCurrentPage('product-management')}>
-          <ProductIcon />          
-          Product Management 
+        <OptionLink to="/user-management">
+          <Icon><FiUsers /></Icon>
+          Manage Users
         </OptionLink>
-        
+        <OptionLink to="/product-management">
+          <Icon><FiBox /></Icon>
+          Manage Product
+        </OptionLink>
       </Sidebar>
-      
       <Content>
-        {currentPage === 'dashboard' && (
-          <div>
-            <h1>Welcome, Admin!</h1>
-            <p>Select an option from the sidebar to manage users or products.</p>
-            <div>User Statistics: {userStats}</div>
-            <div>Product Statistics: {productStats}</div>
-          </div>
-        )}
-        {currentPage === 'product-management' && <ProductManagement />} {/* Render the ProductManagement component when currentPage is 'product-management' */}
+        <div>
+          <h1>Welcome, Admin!</h1>
+          <p>Select an option from the sidebar to manage users or products.</p>
+          <Card>
+            <CardTitle>User Statistics</CardTitle>
+            <CardContent>Total Users: <span style={{ color: palette.black }}>{userStats !== null ? userStats : 'Loading...'}</span></CardContent>
+          </Card>
+          <Card>
+            <CardTitle>Product Statistics</CardTitle>
+            <CardContent>Total Products: <span style={{ color: palette.black }}>{productStats !== null ? productStats : 'Loading...'}</span></CardContent>
+          </Card>
+        </div>
       </Content>
     </DashboardContainer>
   );

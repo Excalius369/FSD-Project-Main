@@ -1,6 +1,20 @@
-// ProductManagement.jsx
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from './Sidebar';
+import { Link } from 'react-router-dom'; // Import Link for navigation
+
+const DashboardContainer = styled.div`
+  display: flex;
+  margin-top: 20px;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  padding: 20px;
+`;
 
 const Table = styled.table`
   width: 100%;
@@ -8,36 +22,62 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  padding: 8px;
+  padding: 12px;
   background-color: #f2f2f2;
   text-align: left;
 `;
 
 const Td = styled.td`
-  padding: 8px;
+  padding: 12px;
   border-bottom: 1px solid #ddd;
 `;
 
 const Button = styled.button`
-  padding: 8px 16px;
+  padding: 10px 20px;
+  margin-right: 10px;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+`;
+
+const AddButton = styled(Button)`
+  float: right;
+  text-decoration: none; /* Remove underline */
+`;
+
+const ActionButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const EditButton = styled(Button)`
+  border-radius: 20px;
+  margin-right: 6px;
+  text-decoration: none; /* Remove underline */
+`;
+
+const DeleteButton = styled(Button)`
+  border-radius: 20px;
 `;
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
 
-  // Fetch products data from backend API
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('your-backend-api-url/products');
+      const response = await fetch('http://localhost:3000/api/products/');
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -47,47 +87,60 @@ const ProductManagement = () => {
 
   const handleDeleteProduct = async (productId) => {
     try {
-      await fetch(`your-backend-api-url/products/${productId}`, {
+      const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
         method: 'DELETE',
       });
-      // Update products state after deletion
-      setProducts(products.filter(product => product.id !== productId));
+      if (response.ok) {
+        toast.success('Product deleted successfully');
+        fetchProducts();
+      } else {
+        toast.error('Failed to delete product');
+      }
     } catch (error) {
       console.error('Error deleting product:', error);
+      toast.error('Error deleting product');
     }
   };
 
   return (
-    <div>
-      <h1>Product Management</h1>
-      <Table>
-        <thead>
-          <tr>
-            <Th>Name</Th>
-            <Th>Category</Th>
-            <Th>Price</Th>
-            <Th>Description</Th>
-            <Th>Actions</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.id}>
-              <Td>{product.name}</Td>
-              <Td>{product.category}</Td>
-              <Td>{product.price}</Td>
-              <Td>{product.description}</Td>
-              <Td>
-                <Button>Edit</Button>
-                <Button onClick={() => handleDeleteProduct(product.id)}>Delete</Button>
-              </Td>
+    <DashboardContainer>
+      <Sidebar />
+      <Content>
+        <h1>Product Management</h1>
+        <AddButton as={Link} to="/add-product">Add Product</AddButton>
+        <Table>
+          <thead>
+            <tr>
+              <Th>Name</Th>
+              <Th>Brand</Th>
+              <Th>Price</Th>
+              <Th>Action</Th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-      {/* Add forms for adding and updating product information here */}
-    </div>
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product._id}>
+                <Td>{product.name}</Td>
+                <Td>{product.brandName}</Td> {/* Render brandname field */}
+                <Td>{product.price}</Td>
+                <Td>
+                  <ActionButtonsContainer>
+                    <EditButton as={Link} to={`/edit-product/${product._id}`}>Edit</EditButton>
+                    <DeleteButton onClick={() => handleDeleteProduct(product._id)}>Delete</DeleteButton>
+                  </ActionButtonsContainer>
+                </Td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <ToastContainer />
+      </Content>
+    </DashboardContainer>
   );
+};
+
+ProductManagement.propTypes = {
+  history: PropTypes.object.isRequired,
 };
 
 export default ProductManagement;
