@@ -6,28 +6,43 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const DashboardContainer = styled.div`
   display: flex;
-  margin-top: 20px;
+  margin-top: 1px;
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 20px;
+  background: #f5f5f5; /* Updated background color */
+`;
+
+const PageTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 600;
+  color: #3b3b3b;
+  margin-bottom: 2rem;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  background: #fff; /* Updated background color */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const Th = styled.th`
-  padding: 12px;
-  background-color: #f2f2f2;
+  padding: 1rem;
+  background: #755cde;
+  font-weight: 500;
+  color: #fff;
   text-align: left;
 `;
 
 const Td = styled.td`
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  font-weight: 400;
 `;
 
 const Button = styled.button`
@@ -36,13 +51,15 @@ const Button = styled.button`
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     background-color: #45a049;
     transform: translateY(-2px);
+    opacity: 0.9;
   }
 `;
 
@@ -79,13 +96,12 @@ const UserManagement = () => {
       toast.error('Error deleting user');
     }
   };
-  
 
   return (
     <DashboardContainer>
       <Sidebar />
       <Content>
-        <h1>User Management</h1>
+        <PageTitle>User Management</PageTitle> {/* Added page title */}
         <Table>
           <thead>
             <tr>

@@ -4,32 +4,48 @@ import PropTypes from 'prop-types';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './Sidebar';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { useNavigate } from 'react-router-dom';
 
 const DashboardContainer = styled.div`
   display: flex;
-  margin-top: 20px;
+  margin-top: 0px;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 20px;
+  background: #f5f5f5;
+`;
+
+const PageTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 600;
+  color: #3b3b3b;
+  margin-bottom: 2rem;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const Th = styled.th`
-  padding: 12px;
-  background-color: #f2f2f2;
+  padding: 1rem;
+  background: #755cde;
+  font-weight: 500;
+  color: #fff;
   text-align: left;
 `;
 
 const Td = styled.td`
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  font-weight: 400;
 `;
 
 const Button = styled.button`
@@ -38,19 +54,21 @@ const Button = styled.button`
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     background-color: #45a049;
     transform: translateY(-2px);
+    opacity: 0.9;
   }
 `;
 
 const AddButton = styled(Button)`
   float: right;
-  text-decoration: none; /* Remove underline */
+  text-decoration: none;
 `;
 
 const ActionButtonsContainer = styled.div`
@@ -61,7 +79,7 @@ const ActionButtonsContainer = styled.div`
 const EditButton = styled(Button)`
   border-radius: 20px;
   margin-right: 6px;
-  text-decoration: none; /* Remove underline */
+  text-decoration: none;
 `;
 
 const DeleteButton = styled(Button)`
@@ -70,6 +88,7 @@ const DeleteButton = styled(Button)`
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Use useNavigate hook
 
   useEffect(() => {
     fetchProducts();
@@ -106,14 +125,15 @@ const ProductManagement = () => {
     <DashboardContainer>
       <Sidebar />
       <Content>
-        <h1>Product Management</h1>
-        <AddButton as={Link} to="/add-product">Add Product</AddButton>
+        <PageTitle>Manage Products</PageTitle>
+        <AddButton onClick={() => navigate('/add-product')}>Add Product</AddButton>
         <Table>
           <thead>
             <tr>
               <Th>Name</Th>
               <Th>Brand</Th>
               <Th>Price</Th>
+              <Th>Category</Th>
               <Th>Action</Th>
             </tr>
           </thead>
@@ -121,11 +141,12 @@ const ProductManagement = () => {
             {products.map(product => (
               <tr key={product._id}>
                 <Td>{product.name}</Td>
-                <Td>{product.brandName}</Td> {/* Render brandname field */}
+                <Td>{product.brandName}</Td>
                 <Td>{product.price}</Td>
+                <Td>{product.category}</Td> {/* Added Category column */}
                 <Td>
                   <ActionButtonsContainer>
-                    <EditButton as={Link} to={`/edit-product/${product._id}`}>Edit</EditButton>
+                    <EditButton onClick={() => navigate(`/edit-product/${product._id}`)}>Edit</EditButton>
                     <DeleteButton onClick={() => handleDeleteProduct(product._id)}>Delete</DeleteButton>
                   </ActionButtonsContainer>
                 </Td>
@@ -139,8 +160,9 @@ const ProductManagement = () => {
   );
 };
 
+// Remove the requirement for history prop
 ProductManagement.propTypes = {
-  history: PropTypes.object.isRequired,
+  history: PropTypes.object,
 };
 
 export default ProductManagement;

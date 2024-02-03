@@ -1,5 +1,3 @@
-// user.js
-
 const router = require("express").Router();
 const User = require("../models/user");
 
@@ -58,17 +56,15 @@ router.get("/", async (req, res) => {
     }
 });
 
-// GET: Get count of all users
-router.get("/count", async (req, res) => {
+// GET: Get total number of users
+router.get("/total", async (req, res) => {
     try {
-        const count = await User.countDocuments().exec();
-        res.status(200).json({ count: count.toString() });
-    } catch (err) {
-        console.error("Error retrieving user count:", err);
-        res.status(500).json({ error: "Error retrieving user count" });
+        const totalUsers = await User.countDocuments();
+        res.json({ totalUsers });
+    } catch (error) {
+        console.error('Error retrieving total users:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-
 
 module.exports = router;

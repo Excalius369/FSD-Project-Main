@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
-
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -50,7 +49,7 @@ const Select = styled.select`
 
 const Button = styled.button`
   padding: 1rem;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
@@ -69,7 +68,7 @@ const AddProduct = () => {
     brandName: '',
     img: '',
     category: '',
-    size: '',
+    size: [], // Initialize size as an empty array
     price: '',
     inStock: true,
   });
@@ -81,7 +80,7 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: name === 'size' ? value.split(',') : value, // Split the sizes into an array
     }));
   };
 
@@ -97,17 +96,17 @@ const AddProduct = () => {
       });
       if (response.ok) {
         setMessage('Product added successfully.');
-        toast.success('Product added successfully'); // Show success toast
+        toast.success('Product added successfully');
         setTimeout(() => {
           navigate('/product-management');
         }, 2000);
       } else {
         setMessage('Error adding product. Please try again.');
-        toast.error('Error adding product. Please try again'); // Show error toast
+        toast.error('Error adding product. Please try again');
       }
     } catch (error) {
       setMessage('Error adding product. Please try again.');
-      toast.error('Error adding product. Please try again'); // Show error toast
+      toast.error('Error adding product. Please try again');
       console.error('Error adding product:', error);
     }
   };
@@ -126,16 +125,15 @@ const AddProduct = () => {
         <Label>Image URL:</Label>
         <Input type="text" name="img" value={formData.img} onChange={handleChange} required />
 
-        <Label>Category:</Label>
         <Select name="category" value={formData.category} onChange={handleChange} required>
           <option value="">Select Category</option>
-          <option value="Sneaker">Sneaker</option>
-          <option value="Sneaker Care">Sneaker Care</option>
-          {/* Add options for different categories */}
+          {['sneaker', 'sneaker care'].map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
         </Select>
 
-        <Label>Size:</Label>
-        <Input type="text" name="size" value={formData.size} onChange={handleChange} />
+        <Label>Size (Separate with commas):</Label>
+        <Input type="text" name="size" value={formData.size.join(',')} onChange={handleChange} />
 
         <Label>Price:</Label>
         <Input type="number" name="price" value={formData.price} onChange={handleChange} required />

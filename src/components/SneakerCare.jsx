@@ -1,18 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
-
-const sneakercare = [
-  { id: 1, name: 'Running Shoes', brandname: 'Nike', image: 'https://example.com/running-shoes.jpg' },
-  { id: 2, name: 'Basketball Sneakers', brandname: 'Adidas', image: 'https://example.com/basketball-sneakers.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  // Add more footwear data as needed...
-];
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -34,12 +24,33 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const SneakerCare = () => {
+  const [sneakerCareData, setSneakerCareData] = useState([]);
+
+  useEffect(() => {
+    fetchSneakerCareProducts();
+  }, []);
+
+  const fetchSneakerCareProducts = async () => {
+    try {
+      // Fetch products by category "sneaker care" from API
+      const response = await fetch('http://localhost:3000/api/products?category=sneaker care');
+      if (!response.ok) {
+        throw new Error('Failed to fetch sneaker care products');
+      }
+      const data = await response.json();
+      setSneakerCareData(data);
+    } catch (error) {
+      console.error('Error fetching sneaker care products:', error);
+      // Handle error, e.g., show a toast message
+    }
+  };
+
   return (
     <Grid container spacing={4}>
-      {sneakercare.map((footwear) => (
-        <Grid item key={footwear.id} xs={12} sm={6} md={4}>
+      {sneakerCareData.map((footwear) => (
+        <Grid item key={footwear._id} xs={12} sm={6} md={4}>
           <StyledCard>
-            <StyledCardMedia component="img" height="200" image={footwear.image} alt={footwear.name} />
+            <StyledCardMedia component="img" height="200" image={footwear.img} alt={footwear.name} />
             <StyledCardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                 {footwear.brandname}
@@ -47,7 +58,7 @@ const SneakerCare = () => {
               <Typography variant="body1">{footwear.name}</Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginTop: '8px' }}>
                 {/* You can add actual price here */}
-                $99.99
+                ₹{footwear.price}
               </Typography>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
                 <IconButton>

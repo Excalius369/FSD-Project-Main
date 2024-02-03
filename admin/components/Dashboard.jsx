@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FiUsers, FiBox, FiHome } from 'react-icons/fi'; // Import Feather icons
+import { FiUsers, FiBox, FiHome, FiLogOut } from 'react-icons/fi'; // Import Feather icons
 import { Link } from 'react-router-dom'; // Import Link for navigation
 
 const palette = {
-  purple: '#5E548E',
-  green: '#9BC400',
-  peach: '#FFB07C',
-  yellow: '#FFD878',
-  grey: '#F7F7F7',
-  black: '#000'
+  purple: '#301E67',
+  peach: '#FFB647',
+  yellow: '#FAD400',
+  grey: '#EDEDED',
+  black: '#1D1D1D'
 };
 
 const DashboardContainer = styled.div`
-  background: linear-gradient(to right, ${palette.purple}, ${palette.green});
+  background: linear-gradient(to right, ${palette.purple}, ${palette.peach});
   display: flex;
 `;
 
@@ -45,11 +44,14 @@ const OptionLink = styled(Link)`
   display: flex;
   align-items: center;
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${palette.grey};
   text-decoration: none;
   margin-bottom: 0.5rem;
-  
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+
   &:hover {
+    background-color: ${palette.purple};
     color: #fff;
   }
 `;
@@ -77,9 +79,28 @@ const CardContent = styled.div`
   color: ${palette.black};
 `;
 
+const LogoutButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${palette.purple};
+    color: #fff;
+  }
+`;
+
 const AdminDashboard = () => {
-  const [userStats, setUserStats] = useState(null); // Changed initial value to null
-  const [productStats, setProductStats] = useState(null); // Changed initial value to null
+  const [userStats, setUserStats] = useState(null);
+  const [productStats, setProductStats] = useState(null);
 
   useEffect(() => {
     fetchUserStatistics();
@@ -88,21 +109,33 @@ const AdminDashboard = () => {
 
   const fetchUserStatistics = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/count');
+      const response = await fetch('http://localhost:3000/api/user/total');
+      if (!response.ok) {
+        throw new Error('Failed to fetch user statistics');
+      }
       const data = await response.json();
-      setUserStats(data.count); // Update state with user count
+      setUserStats(data.totalUsers);
     } catch (error) {
       console.error('Error fetching user statistics:', error);
+      setUserStats();
     }
   };
 
   const fetchProductStatistics = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/product/count');
+      const response = await fetch('http://localhost:3000/api/product/total');
+      if (!response.ok) {
+        throw new Error('Failed to fetch product statistics');
+      }
       const data = await response.json();
-      setProductStats(data.count); // Update state with product count
+      if (typeof data.count === 'number') {
+        setProductStats(data.count);
+      } else {
+        throw new Error('Product count is not a number');
+      }
     } catch (error) {
       console.error('Error fetching product statistics:', error);
+      setProductStats();
     }
   };
 
@@ -122,6 +155,10 @@ const AdminDashboard = () => {
           <Icon><FiBox /></Icon>
           Manage Product
         </OptionLink>
+        <LogoutButton to="/login">
+          <Icon><FiLogOut /></Icon>
+          Logout
+        </LogoutButton>
       </Sidebar>
       <Content>
         <div>

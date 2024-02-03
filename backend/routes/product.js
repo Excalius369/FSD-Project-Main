@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// PUT: Update an existing product by ID
+// Update an existing product by ID
 router.put("/:id", async (req, res) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
         if (qNew) {
             products = await Product.find().sort({ createdAt: -1 }).limit(1);
         } else if (qCategory) {
-            products = await Product.find({ categories: { $in: [qCategory] } });
+            products = await Product.find({ category: qCategory }); // Corrected the query to filter by 'category'
         } else {
             products = await Product.find();
         }

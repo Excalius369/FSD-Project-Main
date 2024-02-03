@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'; // Import SweetAlert
+import withReactContent from 'sweetalert2-react-content'; // Import SweetAlert with React content support
+
+const MySwal = withReactContent(Swal);
 
 const RegisterPageContainer = styled.div`
   display: flex;
@@ -68,12 +72,20 @@ const Register = () => {
 
   const handleRegister = async () => {
     if (!name || !email || !createPassword || !confirmPassword) {
-      alert('Please fill all the required fields.');
+      MySwal.fire({
+        icon: 'error',
+        title: 'Registration Failed!',
+        text: 'Please fill all the required fields.',
+      });
       return;
     }
 
     if (createPassword !== confirmPassword) {
-      alert('Passwords do not match.');
+      MySwal.fire({
+        icon: 'error',
+        title: 'Registration Failed!',
+        text: 'Passwords do not match.',
+      });
       return;
     }
 
@@ -87,13 +99,27 @@ const Register = () => {
       const data = response.data;
   
       if (data.success) {
-        alert('Registration successful!');
-        navigate('/login');
+        MySwal.fire({
+          icon: 'success',
+          title: 'Registration Successful!',
+          text: 'Redirecting to login page...',
+        }).then(() => {
+          navigate('/login');
+        });
       } else {
-        console.error('Registration failed:', data.message);
+        MySwal.fire({
+          icon: 'error',
+          title: 'Registration Failed!',
+          text: data.message || 'Unknown error occurred.',
+        });
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      MySwal.fire({
+        icon: 'error',
+        title: 'Registration Failed!',
+        text: 'Failed to connect to the server. Please try again later.',
+      });
     }
   };
 

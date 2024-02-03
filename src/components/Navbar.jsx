@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-  Search,
-  ShoppingCartOutlined,
-  Menu,
-  AccountCircle,
-  LocalMall,
-  NewReleases,
-  LocalOffer,
-} from '@mui/icons-material';
+import { Search, ShoppingCartOutlined, Menu, AccountCircle, LocalMall, LocalOffer } from '@mui/icons-material';
 import { Badge, MenuItem } from '@mui/material';
 
 const Container = styled.div`
@@ -122,13 +114,13 @@ const Right = styled.div`
 const Dropdown = styled.div`
   position: absolute;
   top: 60px;
-  left: -10px;
+  left: 20px; /* Change from 'right' to 'left' */
   background-color: #ffffff;
   border: 1px solid #ffd700;
-  border-radius: 20px; /* Rounded corners */
+  border-radius: 10px;
   padding: 10px;
   display: ${(props) => (props.$show ? 'block' : 'none')};
-  z-index: 3;
+  z-index: 1000;
   animation: ${(props) => (props.$show ? fadeIn : fadeOut)} 0.3s ease;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 `;
@@ -214,10 +206,7 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <Menu
-            style={{ color: 'white', fontSize: 30, cursor: 'pointer' }}
-            onClick={toggleMenu}
-          />
+          <Menu style={{ color: 'white', fontSize: 30, cursor: 'pointer' }} onClick={toggleMenu} />
           <SearchContainer>
             <Search style={{ color: 'gray', fontSize: 16 }} />
             <Input placeholder="Search" />
@@ -234,7 +223,7 @@ const Navbar = () => {
           <CartLink to="/cart">
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
-                <ShoppingCartOutlined style={{ color: 'white' }} /> {/* Change color to white */}
+                <ShoppingCartOutlined style={{ color: 'white' }} />
               </Badge>
             </MenuItem>
           </CartLink>
@@ -259,7 +248,6 @@ const Navbar = () => {
           </IconWrapper>
           Footwears
         </DropdownItem>
-       
       </Dropdown>
     </Container>
   );

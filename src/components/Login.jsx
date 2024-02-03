@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'; // Import SweetAlert
+import withReactContent from 'sweetalert2-react-content'; // Import SweetAlert with React content support
 
+const MySwal = withReactContent(Swal);
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -73,6 +77,7 @@ const RegisterLink = styled.span`
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -92,20 +97,44 @@ const Login = () => {
       if (data.success) {
         if (data.isAdmin) {
           // Redirect admin to admin page
-          window.location.href = '/dashboard'; // Change the URL to your admin page
+          navigate('/dashboard'); // Use navigate to navigate to dashboard
+          // Show SweetAlert success message for admin login
+          MySwal.fire({
+            icon: 'success',
+            title: ' Logged In Successfully!',
+            text: 'Redirecting to dashboard...',
+          });
         } else {
           // Redirect normal user to homepage
-          window.location.href = '/'; // Change the URL to your homepage
+          navigate('/'); // Use navigate to navigate to homepage
+          // Show SweetAlert success message for user login
+          MySwal.fire({
+            icon: 'success',
+            title: 'Logged In Successfully!',
+            text: 'Redirecting to homepage...',
+          });
         }
       } else {
         console.error('Login failed:', data.message);
+
+        // Show SweetAlert error message for failed login
+        MySwal.fire({
+          icon: 'error',
+          title: 'Login Failed!',
+          text: 'Invalid username or password.',
+        });
       }
     } catch (error) {
       console.error('Error during login:', error);
+
+      // Show SweetAlert error message for login error
+      MySwal.fire({
+        icon: 'error',
+        title: 'Login Failed!',
+        text: 'Failed to connect to the server. Please try again later.',
+      });
     }
   };
-  
-  
 
   return (
     <LoginPageContainer>

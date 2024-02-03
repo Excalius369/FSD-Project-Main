@@ -1,20 +1,8 @@
-// Footwear.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
-
-const footwearData = [
-  { id: 1, name: 'Running Shoes', brandname: 'Nike', image: 'https://example.com/running-shoes.jpg' },
-  { id: 2, name: 'Basketball Sneakers', brandname: 'Adidas', image: 'https://example.com/basketball-sneakers.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-  { id: 3, name: 'Casual Boots', brandname: 'Puma', image: 'https://example.com/casual-boots.jpg' },
-
-  // Add more footwear data as needed...
-];
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -36,20 +24,41 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const Footwear = () => {
+  const [footwearData, setFootwearData] = useState([]);
+
+  useEffect(() => {
+    fetchFootwear();
+  }, []);
+
+  const fetchFootwear = async () => {
+    try {
+      // Fetch footwear data from API
+      const response = await fetch('http://localhost:3000/api/products/?category=sneaker');
+      if (!response.ok) {
+        throw new Error('Failed to fetch footwear');
+      }
+      const data = await response.json();
+      setFootwearData(data);
+    } catch (error) {
+      console.error('Error fetching footwear:', error);
+      // Handle error, e.g., show a toast message
+    }
+  };
+
   return (
     <Grid container spacing={4}>
       {footwearData.map((footwear) => (
-        <Grid item key={footwear.id} xs={12} sm={6} md={4}>
+        <Grid item key={footwear._id} xs={12} sm={6} md={4}>
           <StyledCard>
-            <StyledCardMedia component="img" height="200" image={footwear.image} alt={footwear.name} />
+            <StyledCardMedia component="img" height="200" image={footwear.img} alt={footwear.name} />
             <StyledCardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                 {footwear.brandname}
               </Typography>
               <Typography variant="body1">{footwear.name}</Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginTop: '8px' }}>
-                {/* You can add actual price here */}
-                $99.99
+                {/* Display price in Indian Rupee */}
+                ₹{footwear.price} 
               </Typography>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
                 <IconButton>

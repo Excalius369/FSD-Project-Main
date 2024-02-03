@@ -14,6 +14,7 @@ import Dashboard from '../admin/components/Dashboard';
 import AddProduct from '../admin/components/AddProduct';
 import ProductManagement from '../admin/components/ProductManagement';
 import UserManagement from '../admin/components/UserManagement';
+import EditProduct from '../admin/components/EditProduct';
 
 const App = () => {
   // Define dummy user data
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="/user-management" element={<UserManagement/>} />
         <Route path="/product-management" element={<ProductManagement/>} />
         <Route path="/add-product" element={<AddProduct/>} />
+        <Route path="/edit-product/:id" element={<EditProduct/>} />
       </Routes>
     </Router>
   );
