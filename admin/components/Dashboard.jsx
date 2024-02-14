@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FiUsers, FiBox, FiHome, FiLogOut } from 'react-icons/fi'; // Import Feather icons
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate for navigation
+import { useDispatch } from 'react-redux'; // Import useDispatch for Redux
+import { setLoggedOut } from '../../src/redux/store';
 
 const palette = {
   purple: '#301E67',
@@ -79,7 +81,7 @@ const CardContent = styled.div`
   color: ${palette.black};
 `;
 
-const LogoutButton = styled(Link)`
+const LogoutButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 1.1rem;
@@ -101,6 +103,8 @@ const LogoutButton = styled(Link)`
 const AdminDashboard = () => {
   const [userStats, setUserStats] = useState(null);
   const [productStats, setProductStats] = useState(null);
+  const dispatch = useDispatch(); // Get the dispatch function
+  const navigate = useNavigate(); // Get the navigate function
 
   useEffect(() => {
     fetchUserStatistics();
@@ -139,6 +143,13 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Dispatch the action to set the user as logged out
+    dispatch(setLoggedOut());
+    // Redirect to the login page
+    navigate('/login');
+  };
+
   return (
     <DashboardContainer>
       <Sidebar>
@@ -155,10 +166,10 @@ const AdminDashboard = () => {
           <Icon><FiBox /></Icon>
           Manage Product
         </OptionLink>
-        <LogoutButton to="/login">
+        <LogoutButton onClick={handleLogout}>
           <Icon><FiLogOut /></Icon>
           Logout
-        </LogoutButton>
+        </LogoutButton>  
       </Sidebar>
       <Content>
         <div>

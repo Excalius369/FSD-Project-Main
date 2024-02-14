@@ -9,19 +9,24 @@ import { useNavigate } from 'react-router-dom';
 const DashboardContainer = styled.div`
   display: flex;
   margin-top: 0px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  min-height: 100vh;
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 20px;
-  background: #f5f5f5;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 `;
 
 const PageTitle = styled.h1`
-  font-size: 2rem;
-  font-weight: 600;
-  color: #3b3b3b;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748; /* Dark blue-gray text */
   margin-bottom: 2rem;
 `;
 
@@ -29,30 +34,33 @@ const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  overflow: hidden;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  max-width: 100%; /* Ensure table does not exceed container width */
+  display: block; /* Enable vertical scrolling */
 `;
 
 const Th = styled.th`
-  padding: 1rem;
-  background: #755cde;
-  font-weight: 500;
-  color: #fff;
+  padding: 1.5rem;
+  background: #4a90e2; /* Blue background */
+  font-weight: 700;
+  color: #fff; /* White text */
   text-align: left;
+  white-space: nowrap; /* Prevent text wrapping */
 `;
 
 const Td = styled.td`
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  font-weight: 400;
+  padding: 1.5rem;
+  border-bottom: 1px solid #cbd5e0; /* Light blue-gray border */
+  font-weight: 500;
+  white-space: nowrap; /* Prevent text wrapping */
 `;
 
 const Button = styled.button`
   padding: 10px 20px;
-  margin-right: 10px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #fcbf49; /* Yellow background */
+  color: #2d3748; /* Dark blue-gray text */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -60,7 +68,7 @@ const Button = styled.button`
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #f3b707; /* Darker yellow on hover */
     transform: translateY(-2px);
     opacity: 0.9;
   }
@@ -68,22 +76,19 @@ const Button = styled.button`
 
 const AddButton = styled(Button)`
   float: right;
-  text-decoration: none;
 `;
 
 const ActionButtonsContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 10px; /* Add gap between buttons */
 `;
 
-const EditButton = styled(Button)`
-  border-radius: 20px;
-  margin-right: 6px;
-  text-decoration: none;
-`;
+const EditButton = styled(Button)``;
 
 const DeleteButton = styled(Button)`
-  border-radius: 20px;
+  background-color: #e53e3e; /* Red background */
+  color: #fff; /* White text */
 `;
 
 const ProductManagement = () => {
@@ -138,11 +143,11 @@ const ProductManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map(product => (
+            {products.map((product) => (
               <tr key={product._id}>
                 <Td>{product.name}</Td>
                 <Td>{product.brandName}</Td>
-                <Td>{product.price}</Td>
+                <Td>₹{product.price}</Td> {/* Added dollar sign for price */}
                 <Td>{product.category}</Td> {/* Added Category column */}
                 <Td>
                   <ActionButtonsContainer>

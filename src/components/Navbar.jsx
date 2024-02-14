@@ -169,12 +169,6 @@ const StyledButton = styled(Link)`
   }
 `;
 
-const RegisterButton = styled(StyledButton)`
-  background-color: #ffd700;
-  color: #001f3f;
-  margin-right: 10px;
-`;
-
 const LoginButton = styled(StyledButton)`
   background-color: #ffd700;
   color: #001f3f;
@@ -192,25 +186,34 @@ const CartLink = styled(Link)`
 
 const Navbar = () => {
   const quantity = useSelector((state) => state.cart.quantity);
-  const [showMenu, setShowMenu] = useState(false);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);  const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
 
   const handleDropdownItemClick = () => {
-    setShowMenu(false); // Close the dropdown when a dropdown item is clicked
+    setShowMenu(false);
   };
 
   return (
     <Container>
       <Wrapper>
         <Left>
-          <Menu style={{ color: 'white', fontSize: 30, cursor: 'pointer' }} onClick={toggleMenu} />
-          <SearchContainer>
-            <Search style={{ color: 'gray', fontSize: 16 }} />
-            <Input placeholder="Search" />
-          </SearchContainer>
+          {!isLoggedIn && (
+            <LoginButton to="/login">
+              Login
+            </LoginButton>
+          )}
+          {isLoggedIn && (
+            <>
+              <Menu style={{ color: 'white', fontSize: 30, cursor: 'pointer' }} onClick={toggleMenu} />
+              <SearchContainer>
+                <Search style={{ color: 'gray', fontSize: 16 }} />
+                <Input placeholder="Search" />
+              </SearchContainer>
+            </>
+          )}
         </Left>
         <Center>
           <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
@@ -218,37 +221,46 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
-          <RegisterButton to="/register">Register</RegisterButton>
-          <LoginButton to="/login">Login</LoginButton>
-          <CartLink to="/cart">
-            <MenuItem>
-              <Badge badgeContent={quantity} color="primary">
-                <ShoppingCartOutlined style={{ color: 'white' }} />
-              </Badge>
-            </MenuItem>
-          </CartLink>
+          {isLoggedIn && (
+            <>
+              <CartLink to="/cart">
+                <MenuItem>
+                  <Badge badgeContent={quantity} color="primary">
+                    <ShoppingCartOutlined style={{ color: 'white' }} />
+                  </Badge>
+                </MenuItem>
+              </CartLink>
+              <Link to="/profile" style={{ textDecoration: 'none', color: 'white' }}>
+                <IconWrapper>
+                  <AccountCircle style={{ color: 'white', fontSize: 24, cursor: 'pointer' }} />
+                </IconWrapper>
+              </Link>
+            </>
+          )}
         </Right>
       </Wrapper>
-      <Dropdown $show={showMenu}>
-        <DropdownItem to="/profile" onClick={handleDropdownItemClick}>
-          <IconWrapper>
-            <AccountCircle />
-          </IconWrapper>
-          Profile
-        </DropdownItem>
-        <DropdownItem to="/sneakercare" onClick={handleDropdownItemClick}>
-          <IconWrapper>
-            <LocalMall />
-          </IconWrapper>
-          Sneaker Care
-        </DropdownItem>
-        <DropdownItem to="/footwears" onClick={handleDropdownItemClick}>
-          <IconWrapper>
-            <LocalOffer />
-          </IconWrapper>
-          Footwears
-        </DropdownItem>
-      </Dropdown>
+      {isLoggedIn && (
+        <Dropdown $show={showMenu}>
+          <DropdownItem to="/footwears" onClick={handleDropdownItemClick}>
+            <IconWrapper>
+              <LocalMall style={{ color: '#001f3f', fontSize: 20, marginRight: 10 }} />
+            </IconWrapper>
+            Footwear
+          </DropdownItem>
+          <DropdownItem to="/sneakercare" onClick={handleDropdownItemClick}>
+            <IconWrapper>
+              <LocalOffer style={{ color: '#001f3f', fontSize: 20, marginRight: 10 }} />
+            </IconWrapper>
+            Sneaker Care
+          </DropdownItem>
+          <DropdownItem to="/orders" onClick={handleDropdownItemClick}>
+            <IconWrapper>
+              <LocalMall style={{ color: '#001f3f', fontSize: 20, marginRight: 10 }} />
+            </IconWrapper>
+            Orders
+          </DropdownItem>
+        </Dropdown>
+      )}
     </Container>
   );
 };

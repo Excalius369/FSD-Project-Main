@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLoggedOut } from '../redux/store';
 
 const ProfileContainer = styled.div`
   width: 80%;
@@ -28,13 +31,30 @@ const UserDetails = styled.p`
   }
 `;
 
+const LogoutButton = styled.button`
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+`;
+
 const ProfilePage = () => {
-  // Dummy user data
   const user = {
     name: 'John Doe',
     email: 'john.doe@example.com',
     address: '123 Main Street, City, Country',
-    // Add more user details as needed
+  };
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Dispatch the action to set the user as logged out
+    dispatch(setLoggedOut());
+    // Redirect to the initial homepage
+    navigate('/');
   };
 
   return (
@@ -47,8 +67,8 @@ const ProfilePage = () => {
         <UserDetails><strong>Name:</strong> {user.name}</UserDetails>
         <UserDetails><strong>Email:</strong> {user.email}</UserDetails>
         <UserDetails><strong>Address:</strong> {user.address}</UserDetails>
-        {/* Add more user details as needed */}
       </ProfileDetails>
+      <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
     </ProfileContainer>
   );
 };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Import SweetAlert
-import withReactContent from 'sweetalert2-react-content'; // Import SweetAlert with React content support
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { useDispatch } from 'react-redux';
+import { setLoggedIn, setAdmin } from '../redux/store'; // Import the setAdmin action
 
 const MySwal = withReactContent(Swal);
 const fadeIn = keyframes`
@@ -13,6 +15,17 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 `;
 
@@ -27,10 +40,10 @@ const LoginPageContainer = styled.div`
 
 const LoginForm = styled.form`
   background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
+  border-radius: 20px; /* Pebble corners */
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  width: 400px; /* Increased width for additional styling */
+  width: 400px;
   text-align: center;
   animation: ${fadeIn} 0.5s ease-in-out;
 `;
@@ -42,7 +55,7 @@ const Input = styled.input`
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
-  color: black; /* Text color set to black */
+  color: black;
 `;
 
 const Button = styled.button`
@@ -78,6 +91,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
@@ -91,47 +105,107 @@ const Login = () => {
           password,
         }),
       });
-  
+
       const data = await response.json();
-  
+      console.log(data);
+
       if (data.success) {
+        sessionStorage.setItem('isLoggedIn', true);
+        sessionStorage.setItem('isAdmin', data.isAdmin);
+        sessionStorage.setItem('userId', data.userId);
+
+        dispatch(setLoggedIn(true));
+
         if (data.isAdmin) {
-          // Redirect admin to admin page
-          navigate('/dashboard'); // Use navigate to navigate to dashboard
-          // Show SweetAlert success message for admin login
+          dispatch(setAdmin(true)); // Set isAdmin to true in Redux store
+          navigate('/dashboard'); // Redirect to admin dashboard
           MySwal.fire({
             icon: 'success',
-            title: ' Logged In Successfully!',
-            text: 'Redirecting to dashboard...',
+            title: 'Welcome Admin!',
+            html: `
+              <p style="font-size: 18px; color: #fff;">You've successfully logged in as an admin.</p>
+              <p style="font-size: 16px; color: #fff;">Redirecting to admin dashboard...</p>
+            `,
+            showConfirmButton: false,
+            timer: 3000, // Auto close after 3 seconds
+            background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+            customClass: {
+              title: 'custom-title',
+              container: 'custom-container',
+              popup: 'custom-popup',
+            },
+            onOpen: (popup) => {
+              popup.classList.remove('animate__animated');
+              popup.classList.remove('animate__fadeIn');
+              void popup.offsetWidth; // Trigger reflow
+              popup.classList.add('animate__animated', 'animate__fadeIn');
+            },
           });
         } else {
-          // Redirect normal user to homepage
-          navigate('/'); // Use navigate to navigate to homepage
-          // Show SweetAlert success message for user login
+          navigate('/');
           MySwal.fire({
             icon: 'success',
-            title: 'Logged In Successfully!',
-            text: 'Redirecting to homepage...',
+            title: 'Login Successful!',
+            html: `
+              <p style="font-size: 18px; color: #fff;">Welcome back, ${username}!</p>
+              <p style="font-size: 16px; color: #fff;">Redirecting to homepage...</p>
+            `,
+            showConfirmButton: false,
+            timer: 3000, // Auto close after 3 seconds
+            background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+            customClass: {
+              title: 'custom-title',
+              container: 'custom-container',
+              popup: 'custom-popup',
+            },
+            onOpen: (popup) => {
+              popup.classList.remove('animate__animated');
+              popup.classList.remove('animate__fadeIn');
+              void popup.offsetWidth; // Trigger reflow
+              popup.classList.add('animate__animated', 'animate__fadeIn');
+            },
           });
         }
       } else {
         console.error('Login failed:', data.message);
 
-        // Show SweetAlert error message for failed login
         MySwal.fire({
           icon: 'error',
           title: 'Login Failed!',
           text: 'Invalid username or password.',
+          background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+          customClass: {
+            title: 'custom-title',
+            container: 'custom-container',
+            popup: 'custom-popup',
+          },
+          onOpen: (popup) => {
+            popup.classList.remove('animate__animated');
+            popup.classList.remove('animate__fadeIn');
+            void popup.offsetWidth; // Trigger reflow
+            popup.classList.add('animate__animated', 'animate__fadeIn');
+          },
         });
       }
     } catch (error) {
       console.error('Error during login:', error);
 
-      // Show SweetAlert error message for login error
       MySwal.fire({
         icon: 'error',
         title: 'Login Failed!',
         text: 'Failed to connect to the server. Please try again later.',
+        background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+        customClass: {
+          title: 'custom-title',
+          container: 'custom-container',
+          popup: 'custom-popup',
+        },
+        onOpen: (popup) => {
+          popup.classList.remove('animate__animated');
+          popup.classList.remove('animate__fadeIn');
+          void popup.offsetWidth; // Trigger reflow
+          popup.classList.add('animate__animated', 'animate__fadeIn');
+        },
       });
     }
   };

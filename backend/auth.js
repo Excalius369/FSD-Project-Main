@@ -24,7 +24,8 @@ router.post('/login', async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (isPasswordValid) {
-      res.status(200).json({ success: true, isAdmin: false });
+      // Assuming user has an _id field, include it in the response
+      res.status(200).json({ success: true, isAdmin: false, userId: user._id });
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }

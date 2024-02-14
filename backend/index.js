@@ -24,11 +24,14 @@ app.use(express.json());
 const authRoutes = require('./auth');
 app.use('/api/auth', authRoutes);
 
-const userRoute = require("./routes/user"); // Move this line after defining `app`
+const userRoute = require("./routes/user");
 app.use("/api/user", userRoute);
 
-const productRoute = require("./routes/product"); // Move this line after defining `app`
+const productRoute = require("./routes/product");
 app.use("/api/products", productRoute);
+
+const cartRoute = require("./routes/cart"); // Add this line
+app.use("/api/cart", cartRoute); // Add this line
 
 // Serve static files from the 'build' directory
 app.use(express.static(path.join(__dirname, 'build')));

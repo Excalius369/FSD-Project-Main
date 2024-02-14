@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { fetchCartItems } from '../redux/cartActions'; // Import fetchCartItems action creator
 
 const Container = styled.div`
   width: 60%;
@@ -136,9 +137,31 @@ const ProceedToBuyButton = styled.button`
   }
 `;
 
+
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    const userId = getUserId();
+    if (userId) {
+      dispatch(fetchCartItems(userId));
+    }
+  }, [dispatch]);
+
+  const getUserId = () => {
+    const userId = sessionStorage.getItem('userId');
+    console.log('User ID retrieved:', userId);
+    return userId; // Return null if userId is not found in sessionStorage
+  };
+
+  const userId = getUserId();
+  useEffect(() => {
+    const userId = getUserId(); // Move getUserId here
+    if (userId) {
+      dispatch(fetchCartItems(userId)); // Fetch cart items if userId exists
+    }
+  }, [dispatch]); 
 
   const handleQuantityChange = (productId, newQuantity) => {
     // Dispatch an action to update the quantity in the Redux store
@@ -156,20 +179,25 @@ const Cart = () => {
   };
 
   const calculateSubtotal = () => {
+    if (!cart || !cart.products) {
+      return 0; // or any default value you prefer
+    }
+  
     return cart.products.reduce(
       (total, product) => total + product.price * product.quantity,
       0
     ).toFixed(2);
   };
+  
 
-  const cartItemCount = cart.products.length;
+  const cartItemCount = cart.products ? cart.products.length : 0;
 
   return (
     <Container>
       <Header>
         <h1 style={{ color: '#3d5a80', fontSize: '24px' }}>Welcome to Cart</h1>
       </Header>
-      {cart.products.length === 0 ? (
+      {cart && cart.products && cart.products.length === 0 ? (
         <div style={{ textAlign: 'center' }}>
           <CartIcon icon={faShoppingCart} />
           <p style={{ color: '#8b4513', fontSize: '16px' }}>
@@ -185,12 +213,10 @@ const Cart = () => {
             Proceed to Buy ({cartItemCount} items)
           </ProceedToBuyButton>
           <br />
-          {cart.products.map((product) => (
-            <ProductContainer key={product._id}>
+          {cart.products && cart.products.map((product) => (            <ProductContainer key={product._id}>
               <GridItem>
-              <ProductImage
-  src={product.images && product.images[0]}
-/>
+                <ProductImage src={product.img && product.img[0]} alt={product.name} />
+
                 <ProductDetails>
                   <h3 style={{ color: '#3d5a80', fontSize: '20px' }}>
                     {product.name}
@@ -234,5 +260,20 @@ const Cart = () => {
     </Container>
   );
 };
+
+// Function to get user ID (Replace with actual implementation)
+// Function to get user ID
+const getUserId = () => {
+  // Retrieve user ID from session storage, local storage, or Redux store
+  // Replace 'userId' with the actual key you're using to store the user ID
+  const userId = sessionStorage.getItem('userId');
+  // If using local storage:
+  // const userId = localStorage.getItem('userId');
+  // If using Redux store:
+  // const userId = useSelector((state) => state.auth.userId); // Replace 'auth' with your actual slice name
+
+  return userId;
+};
+
 
 export default Cart;
