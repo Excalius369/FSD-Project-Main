@@ -1,11 +1,10 @@
 import { configureStore, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
+import { fetchCartItemsStart, fetchCartItemsSuccess, fetchCartItemsFailure } from './cartRedux';  // Add this import statement
 
 const initialState = {
-  auth: {
-    isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
-    isAdmin: sessionStorage.getItem('isAdmin') === 'true', // Update isAdmin state based on sessionStorage
-  },
+  isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
+  isAdmin: false,
   cart: {
     loading: false,
     error: null,
@@ -15,13 +14,25 @@ const initialState = {
   },
 };
 
+// Define getUserId function to retrieve user ID from session storage
+const getUserId = () => {
+  const userId = sessionStorage.getItem('userId');
+  if (!userId) {
+    console.error('User ID not found in session storage.');
+    return null;
+  }
+  return userId;
+};
+
 export const fetchCartItems = createAsyncThunk(
   'cart/fetchCartItems',
   async (userId, thunkAPI) => {
     try {
+      thunkAPI.dispatch(fetchCartItemsStart());  // Dispatch the start action
       const response = await axios.get(`/api/cart/user/${userId}`);
-      return response.data;
+      thunkAPI.dispatch(fetchCartItemsSuccess(response.data));  // Dispatch the success action
     } catch (error) {
+      thunkAPI.dispatch(fetchCartItemsFailure(error.message));  // Dispatch the failure action
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -54,7 +65,7 @@ const cartSlice = createSlice({
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: initialState.auth,
+  initialState: initialState,
   reducers: {
     setLoggedIn(state, action) {
       state.isLoggedIn = action.payload;
@@ -71,44 +82,39 @@ const authSlice = createSlice({
 export const { setLoggedIn, setLoggedOut, setAdmin } = authSlice.actions;
 
 export const selectAuth = (state) => state.auth;
-export const selectCart = (state) => state.cart;
-
-export const login = (username, password) => async (dispatch) => {
-  try {
-    const response = await axios.post('http://localhost:3000/api/auth/login', {
-      username,
-      password,
-    });
-    const data = response.data;
-    sessionStorage.setItem('isLoggedIn', true);
-    sessionStorage.setItem('isAdmin', data.isAdmin);
-    dispatch(setLoggedIn(true));
-    dispatch(setAdmin(data.isAdmin));
-  } catch (error) {
-    console.error('Error during login:', error);
+export const addProductToCart = createAsyncThunk(
+  'cart/addProductToCart',
+  async ({ userId, productId }) => {
+    try {
+      // Make a POST request to add the product to the cart
+      const response = await axios.post(`/api/cart`, {
+        user: userId,
+        product: productId,
+        quantity: 1, // Assuming the default quantity is 1
+      });
+      return response.data; // Return the updated cart data
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
-};
-
-export const logout = () => async (dispatch) => {
-  try {
-    // Perform logout logic, clear sessionStorage, and dispatch setLoggedOut
-    sessionStorage.clear();
-    dispatch(setLoggedOut());
-  } catch (error) {
-    console.error('Error during logout:', error);
-  }
-};
+);
 
 export const fetchCart = () => async (dispatch, getState) => {
   try {
     const { auth } = getState();
     if (auth.isLoggedIn) {
-      dispatch(fetchCartItems());
+      const userId = getUserId(); // Retrieve the userId
+      if (userId) { // Check if userId is not null
+        dispatch(fetchCartItems(userId)); // Pass the userId to fetchCartItems
+      } else {
+        console.error('User ID is undefined.');
+      }
     }
   } catch (error) {
     console.error('Error fetching cart items:', error);
   }
 };
+export const selectCart = (state) => state.cart;
 
 export default configureStore({
   reducer: {

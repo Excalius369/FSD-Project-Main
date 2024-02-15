@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { GlobalStyles } from '@mui/material';
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCart } from '../redux/store'; ;
 import Swal from 'sweetalert2';
-import { addProduct } from '../redux/cartRedux';
+import { addProductToCart } from '../redux/store';
 
 const Container = styled.div`
   display: flex;
@@ -86,7 +85,9 @@ const ProductPage = () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/products/${id}`);
         setProduct(response.data);
-        dispatch(fetchCart()); // Dispatch fetchCart action to load cart items
+
+        // Store the product ID in session storage
+        sessionStorage.setItem('productId', response.data._id);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -95,9 +96,15 @@ const ProductPage = () => {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
+  const getUserId = () => {
+    const userId = sessionStorage.getItem('userId');
+    console.log('User ID retrieved:', userId);
+    return userId; // Return null if userId is not found in sessionStorage
+  };
+
+  const handleAddToCart = async () => {
     
-    if (!isLoggedIn) { // Check if user is not logged in
+    if (!isLoggedIn) {
       Swal.fire({
         icon: 'info',
         title: 'Login Required',
@@ -106,30 +113,44 @@ const ProductPage = () => {
         timer: 2000,
       });
       navigate('/login');
-      return; // Redirect to login page
+      return;
     }
-    if (product) {
-      dispatch(addProduct(product));
-      Swal.fire({
-        icon: 'success',
-        title: 'Product added to cart!',
-        text: `${product.name} has been added to your cart.`,
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        customClass: {
-          popup: 'popup-class',
-          icon: 'icon-class',
-          title: 'title-class', 
-          content: 'content-class',
-        },
-        showClass: {
-          popup: 'animate__animated animate__fadeInDown popup-class',
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp popup-class',
-        },
-      });
+  
+    const storedProductId = sessionStorage.getItem('productId');
+
+    if (product && storedProductId) {
+      try {
+        await axios.post('http://localhost:3000/api/cart', {
+          user: getUserId(),
+          product: storedProductId,
+          quantity: 1,
+        });
+        
+        dispatch(addProductToCart({ userId: getUserId(), productId: storedProductId }));
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Product added to cart!',
+          text: `${product.name} has been added to your cart.`,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          customClass: {
+            popup: 'popup-class',
+            icon: 'icon-class',
+            title: 'title-class', 
+            content: 'content-class',
+          },
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown popup-class',
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp popup-class',
+          },
+        });
+      } catch (error) {
+        console.error('Error adding product to cart:', error);
+      }
     }
   };
 

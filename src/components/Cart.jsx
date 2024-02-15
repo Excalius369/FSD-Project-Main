@@ -137,7 +137,6 @@ const ProceedToBuyButton = styled.button`
   }
 `;
 
-
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
@@ -145,31 +144,26 @@ const Cart = () => {
   useEffect(() => {
     const userId = getUserId();
     if (userId) {
-      dispatch(fetchCartItems(userId));
+      dispatch(fetchCartItems(userId)); // Fetch cart items for the user
     }
   }, [dispatch]);
 
+  // Define getUserId function before its usage
   const getUserId = () => {
     const userId = sessionStorage.getItem('userId');
     console.log('User ID retrieved:', userId);
     return userId; // Return null if userId is not found in sessionStorage
   };
 
-  const userId = getUserId();
-  useEffect(() => {
-    const userId = getUserId(); // Move getUserId here
-    if (userId) {
-      dispatch(fetchCartItems(userId)); // Fetch cart items if userId exists
-    }
-  }, [dispatch]); 
-
   const handleQuantityChange = (productId, newQuantity) => {
     // Dispatch an action to update the quantity in the Redux store
+    // You need to define the 'UPDATE_QUANTITY' action type in your Redux actions and reducers
     dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, newQuantity } });
   };
 
   const handleDelete = (productId) => {
     // Dispatch an action to remove the product from the Redux store
+    // You need to define the 'REMOVE_PRODUCT' action type in your Redux actions and reducers
     dispatch({ type: 'REMOVE_PRODUCT', payload: { productId } });
   };
 
@@ -188,7 +182,6 @@ const Cart = () => {
       0
     ).toFixed(2);
   };
-  
 
   const cartItemCount = cart.products ? cart.products.length : 0;
 
@@ -213,7 +206,8 @@ const Cart = () => {
             Proceed to Buy ({cartItemCount} items)
           </ProceedToBuyButton>
           <br />
-          {cart.products && cart.products.map((product) => (            <ProductContainer key={product._id}>
+          {cart.products && cart.products.map((product, index) => (
+            <ProductContainer key={index}>
               <GridItem>
                 <ProductImage src={product.img && product.img[0]} alt={product.name} />
 
@@ -260,20 +254,5 @@ const Cart = () => {
     </Container>
   );
 };
-
-// Function to get user ID (Replace with actual implementation)
-// Function to get user ID
-const getUserId = () => {
-  // Retrieve user ID from session storage, local storage, or Redux store
-  // Replace 'userId' with the actual key you're using to store the user ID
-  const userId = sessionStorage.getItem('userId');
-  // If using local storage:
-  // const userId = localStorage.getItem('userId');
-  // If using Redux store:
-  // const userId = useSelector((state) => state.auth.userId); // Replace 'auth' with your actual slice name
-
-  return userId;
-};
-
 
 export default Cart;

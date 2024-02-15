@@ -17,6 +17,7 @@ import UserManagement from '../admin/components/UserManagement';
 import EditProduct from '../admin/components/EditProduct';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdmin } from './redux/store';
+import OrderPlacementPage from './components/OrderPlacement';
 
 const App = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/footwears" element={<Layout><Footwear /></Layout>} />
         <Route path="/contact-us" element={<Layout><ContactUs/></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
+        <Route path="/order-placement" element={<Layout><OrderPlacementPage/></Layout>} />
         {isAdmin && (
           <>
             <Route path="/dashboard" element={<Dashboard/>} />
