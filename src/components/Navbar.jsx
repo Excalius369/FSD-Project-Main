@@ -253,7 +253,7 @@ const Navbar = () => {
             </IconWrapper>
             Sneaker Care
           </DropdownItem>
-          <DropdownItem to="/orders" onClick={handleDropdownItemClick}>
+          <DropdownItem to="/orderspage" onClick={handleDropdownItemClick}>
             <IconWrapper>
               <LocalMall style={{ color: '#001f3f', fontSize: 20, marginRight: 10 }} />
             </IconWrapper>

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Import SweetAlert
-import withReactContent from 'sweetalert2-react-content'; // Import SweetAlert with React content support
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import V1Gif from '../components/asset/V1.gif';
 
 const MySwal = withReactContent(Swal);
 
@@ -12,7 +13,7 @@ const RegisterPageContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: url('https://media.giphy.com/media/3o7bujnKrJCz2k7pW8/giphy.gif') no-repeat center center fixed;
+  background: url(${V1Gif}) no-repeat center center fixed;
   background-size: cover;
 `;
 
@@ -68,10 +69,12 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [createPassword, setCreatePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [pincode, setPincode] = useState('');
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    if (!name || !email || !createPassword || !confirmPassword) {
+    if (!name || !email || !createPassword || !confirmPassword || !address || !pincode) {
       MySwal.fire({
         icon: 'error',
         title: 'Registration Failed!',
@@ -79,7 +82,7 @@ const Register = () => {
       });
       return;
     }
-
+  
     if (createPassword !== confirmPassword) {
       MySwal.fire({
         icon: 'error',
@@ -88,12 +91,14 @@ const Register = () => {
       });
       return;
     }
-
+  
     try {
       const response = await axios.post('http://localhost:3000/api/auth/register', {
         username: name,
         email,
         password: createPassword,
+        address, // Include address
+        pincode, // Include pincode
       });
   
       const data = response.data;
@@ -104,7 +109,7 @@ const Register = () => {
           title: 'Registration Successful!',
           text: 'Redirecting to login page...',
         }).then(() => {
-          navigate('/login');
+          navigate('/login'); // Redirect to login page after successful registration
         });
       } else {
         MySwal.fire({
@@ -150,6 +155,18 @@ const Register = () => {
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Pincode"
+          value={pincode}
+          onChange={(e) => setPincode(e.target.value)}
         />
         <Button type="button" onClick={handleRegister}>
           Register

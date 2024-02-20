@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'; // Corrected import statement
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -63,7 +63,7 @@ const Footwear = () => {
               <StyledCardMedia component="img" height="200" image={footwear.img} alt={footwear.name} />
               <StyledCardContent>
                 <Typography variant="h6" style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                  {footwear.brandname}
+                  {footwear.brandName} {/* Corrected property name */}
                 </Typography>
                 <Typography variant="body1" style={{ marginBottom: '16px' }}>{footwear.name}</Typography>
                 <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold', marginBottom: '16px' }}>
@@ -74,8 +74,8 @@ const Footwear = () => {
                     <FavoriteBorderOutlinedIcon style={{ color: '#ff4e50' }} />
                   </IconButton>
                   <Button component={Link} to={`/product/${footwear._id}`} variant="contained" color="primary" style={{ borderRadius: '20px' }}>
-            View Product
-          </Button>
+                    View Product
+                  </Button>
                 </div>
               </StyledCardContent>
             </StyledCard>

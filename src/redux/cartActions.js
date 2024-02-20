@@ -5,28 +5,26 @@ import { fetchCartItemsStart, fetchCartItemsSuccess, fetchCartItemsFailure } fro
 // Ensure consistency in base URL
 axios.defaults.baseURL = 'http://localhost:3000/api';
 
-
 export const fetchCartItems = createAsyncThunk(
   'cart/fetchCartItems',
   async (userId, thunkAPI) => {
     try {
       thunkAPI.dispatch(fetchCartItemsStart());
       const response = await axios.get(`/cart/user/${userId}`);
-      
-      // Assuming the response structure is an object with a 'products' key containing an array of products
-      thunkAPI.dispatch(fetchCartItemsSuccess(response.data.products)); // Dispatch only products array
+      thunkAPI.dispatch(fetchCartItemsSuccess(response.data));
+      return response.data;
     } catch (error) {
       thunkAPI.dispatch(fetchCartItemsFailure(error.message));
+      throw error;
     }
   }
 );
-
 
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
   async ({ userId, productId, quantity }, thunkAPI) => {
     try {
-      const response = await axios.post('/cart', { userId, productId, quantity });
+      const response = await axios.post('/cart', { user: userId, product: productId, quantity });
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -57,3 +55,5 @@ export const updateCartItem = createAsyncThunk(
     }
   }
 );
+
+export default { fetchCartItems, addToCart, removeCartItem, updateCartItem };

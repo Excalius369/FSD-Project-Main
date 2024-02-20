@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../backend/models/user');
+const User = require('./models/user');
 const bcrypt = require('bcrypt');
 
 // Login route
@@ -40,8 +40,8 @@ router.post('/login', async (req, res) => {
 // Registration route
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
+    const { username, email, password, address, pincode } = req.body; // Include address and pincode
+    if (!username || !email || !password || !address || !pincode) { // Check if any field is missing
       return res.status(400).json({ success: false, message: 'Please fill all the required fields.' });
     }
 
@@ -53,7 +53,7 @@ router.post('/register', async (req, res) => {
     // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword, address, pincode }); // Include address and pincode
     await newUser.save();
 
     res.status(201).json({ success: true, message: 'User registered successfully.' });

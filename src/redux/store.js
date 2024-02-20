@@ -31,6 +31,7 @@ export const fetchCartItems = createAsyncThunk(
       thunkAPI.dispatch(fetchCartItemsStart());  // Dispatch the start action
       const response = await axios.get(`/api/cart/user/${userId}`);
       thunkAPI.dispatch(fetchCartItemsSuccess(response.data));  // Dispatch the success action
+      return response.data; // Return the fetched data
     } catch (error) {
       thunkAPI.dispatch(fetchCartItemsFailure(error.message));  // Dispatch the failure action
       return thunkAPI.rejectWithValue(error.message);
@@ -114,6 +115,7 @@ export const fetchCart = () => async (dispatch, getState) => {
     console.error('Error fetching cart items:', error);
   }
 };
+
 export const selectCart = (state) => state.cart;
 
 export default configureStore({

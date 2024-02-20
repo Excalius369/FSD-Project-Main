@@ -12,7 +12,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// PUT: Update an existing user by ID
 router.put("/:id", async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(
@@ -25,7 +24,6 @@ router.put("/:id", async (req, res) => {
         res.status(500).json(err);
     }
 });
-
 // DELETE: Delete a user by ID
 router.delete("/:id", async (req, res) => {
     try {
@@ -57,14 +55,14 @@ router.get("/", async (req, res) => {
 });
 
 // GET: Get total number of users
-router.get("/total", async (req, res) => {
+router.get('/total', async (req, res) => {
     try {
-        const totalUsers = await User.countDocuments();
-        res.json({ totalUsers });
+      const totalUsers = await User.countDocuments();
+      res.status(200).json({ totalUsers });
     } catch (error) {
-        console.error('Error retrieving total users:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching total number of users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-});
+  });
 
 module.exports = router;

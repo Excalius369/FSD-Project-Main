@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavi
 import { useDispatch } from 'react-redux'; // Import useDispatch for Redux
 import { setLoggedOut } from '../../src/redux/store';
 
+
 const palette = {
   purple: '#301E67',
   peach: '#FFB647',
@@ -100,56 +101,46 @@ const LogoutButton = styled.button`
   }
 `;
 
-const AdminDashboard = () => {
+const Dashboard = () => {
   const [userStats, setUserStats] = useState(null);
   const [productStats, setProductStats] = useState(null);
-  const dispatch = useDispatch(); // Get the dispatch function
-  const navigate = useNavigate(); // Get the navigate function
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserStatistics();
-    fetchProductStatistics();
+    fetchStatistics();
   }, []);
 
-  const fetchUserStatistics = async () => {
+  const fetchStatistics = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/total');
-      if (!response.ok) {
-        throw new Error('Failed to fetch user statistics');
-      }
-      const data = await response.json();
-      setUserStats(data.totalUsers);
-    } catch (error) {
-      console.error('Error fetching user statistics:', error);
-      setUserStats();
-    }
-  };
+      const userResponse = await fetch('http://localhost:3000/api/users/total');
+      const productResponse = await fetch('http://localhost:3000/api/products/total');
 
-  const fetchProductStatistics = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/product/total');
-      if (!response.ok) {
-        throw new Error('Failed to fetch product statistics');
+      if (!userResponse.ok || !productResponse.ok) {
+        throw new Error('Failed to fetch statistics');
       }
-      const data = await response.json();
-      if (typeof data.count === 'number') {
-        setProductStats(data.count);
-      } else {
-        throw new Error('Product count is not a number');
-      }
+
+      const userData = await userResponse.json();
+      const productData = await productResponse.json();
+
+      setUserStats(userData.totalUsers);
+      setProductStats(productData.totalProducts);
     } catch (error) {
-      console.error('Error fetching product statistics:', error);
-      setProductStats();
+      console.error('Error fetching statistics:', error);
+      setUserStats('Error');
+      setProductStats('Error');
     }
   };
 
   const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.clear();
     // Dispatch the action to set the user as logged out
     dispatch(setLoggedOut());
-    // Redirect to the login page
-    navigate('/login');
+    // Redirect to the login page and replace the current entry in the history stack
+    window.location.replace('/login');
   };
-
+  
   return (
     <DashboardContainer>
       <Sidebar>
@@ -189,4 +180,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Dashboard;

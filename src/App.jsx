@@ -9,6 +9,7 @@ import Footwear from './components/Footwear';
 import Cart from './components/Cart';
 import ProfilePage from './components/ProfilePage';
 import SneakerCare from './components/SneakerCare';
+// Adjusted import statement
 import ContactUs from './components/ContactUs';
 import Dashboard from '../admin/components/Dashboard';
 import AddProduct from '../admin/components/AddProduct';
@@ -18,6 +19,8 @@ import EditProduct from '../admin/components/EditProduct';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdmin } from './redux/store';
 import OrderPlacementPage from './components/OrderPlacement';
+import PaymentForm from './components/PaymentForm';
+import OrderedPage from './components/Orders';
 
 const App = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -25,8 +28,10 @@ const App = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    // Clear session storage
     sessionStorage.clear();
-    return <Navigate to="/login" />;
+    // Redirect to the login page
+    return <Navigate to="/login" replace />;
   };
 
   // Example usage to set isAdmin
@@ -42,9 +47,11 @@ const App = () => {
         <Route path="/profile" element={isLoggedIn ? <Layout><ProfilePage /></Layout> : <Navigate to="/login" />} />
         <Route path="/sneakercare" element={<Layout><SneakerCare/></Layout>} />
         <Route path="/footwears" element={<Layout><Footwear /></Layout>} />
+        <Route path="/orderspage" element={<Layout><OrderedPage/></Layout>} /> {/* Corrected route */}
         <Route path="/contact-us" element={<Layout><ContactUs/></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         <Route path="/order-placement" element={<Layout><OrderPlacementPage/></Layout>} />
+        <Route path="/payment-form" element={<Layout><PaymentForm/></Layout>} /> {/* Corrected route */}
         {isAdmin && (
           <>
             <Route path="/dashboard" element={<Dashboard/>} />
@@ -54,6 +61,8 @@ const App = () => {
             <Route path="/edit-product/:id" element={<EditProduct/>} />
           </>
         )}
+        {/* Add a route for logout */}
+        <Route path="/logout" element={handleLogout} />
       </Routes>
     </Router>
   );

@@ -1,8 +1,9 @@
+// EditProduct.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormContainer = styled.div`
   max-width: 600px;
@@ -73,12 +74,15 @@ const EditProduct = () => {
         price: '',
         inStock: true,
     });
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const response = await fetch(`http://localhost:3000/api/products/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch product');
+                }
                 const data = await response.json();
                 setFormData(data);
             } catch (error) {
@@ -107,14 +111,13 @@ const EditProduct = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
-                toast.success('Product updated successfully');
-                setTimeout(() => {
-                    navigate('/product-management');
-                  }, 2000); // Redirect to ProductManagement page
-            } else {
-                toast.error('Failed to update product');
+            if (!response.ok) {
+                throw new Error('Failed to update product');
             }
+            toast.success('Product updated successfully');
+            setTimeout(() => {
+                navigate('/product-management');
+            }, 2000);
         } catch (error) {
             toast.error('Error updating product');
             console.error('Error updating product:', error);
@@ -123,7 +126,7 @@ const EditProduct = () => {
 
     return (
         <>
-            <ToastContainer/> {/* Render ToastContainer at the root level */}
+            <ToastContainer/>
             <FormContainer>
                 <Title>Edit Product</Title>
                 <Form onSubmit={handleSubmit}>
@@ -137,11 +140,10 @@ const EditProduct = () => {
                     <Input type="text" name="img" value={formData.img} onChange={handleChange} required />
 
                     <Label>Category:</Label>
-                    <Select name="category" value={formData.category} onChange={handleChange} required>
+                    <Select name="category" value={formData.category} onChange={handleChange} disabled>
                         <option value="">Select Category</option>
                         <option value="Sneaker">Sneaker</option>
                         <option value="Sneaker Care">Sneaker Care</option>
-                        {/* Add options for different categories */}
                     </Select>
 
                     <Label>Size:</Label>
@@ -155,7 +157,7 @@ const EditProduct = () => {
                         <option value="true">Yes</option>
                         <option value="false">No</option>
                     </Select>
-                    <Button type="submit">Update Product</Button> {/* Submit button */}
+                    <Button type="submit">Update Product</Button>
                 </Form>
             </FormContainer>
         </>

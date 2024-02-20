@@ -16,6 +16,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    address:{
+      type: String,
+      required: true,
+      unique: true,
+    }, // New field for address
+    pincode:{
+      type: String,
+      required: true,
+      unique: true,
+    }, // New field for pincode
     role: {
       type: String,
       default: "user",

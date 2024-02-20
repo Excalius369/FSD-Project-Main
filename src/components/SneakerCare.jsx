@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,7 @@ const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
   border-radius: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1); /* Updated box shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease-in-out;
 
@@ -74,8 +73,8 @@ const SneakerCare = () => {
                     <FavoriteBorderOutlinedIcon style={{ color: '#ff4e50' }} />
                   </IconButton>
                   <Button component={Link} to={`/product/${footwear._id}`} variant="contained" color="primary" style={{ borderRadius: '20px' }}>
-            View Product
-          </Button>
+                    View Product
+                  </Button>
                 </div>
               </StyledCardContent>
             </StyledCard>

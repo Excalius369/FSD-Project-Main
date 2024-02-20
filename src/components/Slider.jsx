@@ -77,7 +77,7 @@ const ShowNowButton = styled.button`
 
 const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
-  const totalSlides = 3;
+  const totalSlides = 5;
   const navigate = useNavigate();
 
   const handleArrowClick = direction => {
@@ -118,10 +118,10 @@ const Slider = () => {
         <ArrowLeftOutlinedIcon />
       </Arrow>
       <Wrapper style={{ transform: `translateX(-${slideIndex * 100}vw)` }}>
-        <Slide>
+      <Slide>
           <ImgContainer>
             <Image
-              src="https://www.superkicks.in/cdn/shop/files/AIR_FORCE_1_MID_EVO_01_a3ea0d04-345a-4f69-aae9-c875a4d03e1a.png?v=1704264667"
+              src="https://www.superkicks.in/cdn/shop/files/GEL-1130.png?v=1708327030"
               alt="Slide 1"
             />
             <ShowNowButton onClick={redirectToProductPage}>SHOP NOW</ShowNowButton>
@@ -130,7 +130,7 @@ const Slider = () => {
         <Slide>
           <ImgContainer>
             <Image
-              src="https://www.superkicks.in/cdn/shop/files/RIGHT_BANNER_TOP_LAST_01_1.png?v=1704264549"
+              src="https://www.superkicks.in/cdn/shop/files/AIR_FORCE_1_MID_EVO_01_a3ea0d04-345a-4f69-aae9-c875a4d03e1a.png?v=1704264667"
               alt="Slide 2"
             />
             <ShowNowButton onClick={redirectToProductPage}>SHOP NOW</ShowNowButton>
@@ -139,8 +139,26 @@ const Slider = () => {
         <Slide>
           <ImgContainer>
             <Image
-              src="https://www.superkicks.in/cdn/shop/files/LIL_NAS_X_CROCS_-LEFT_4892c0f3-3a97-40b9-8add-3f278447e6d0.png?v=1703780220"
+              src="https://www.superkicks.in/cdn/shop/files/RIGHT_BANNER_TOP_LAST_01_1.png?v=1704264549"
               alt="Slide 3"
+            />
+            <ShowNowButton onClick={redirectToProductPage}>SHOP NOW</ShowNowButton>
+          </ImgContainer>
+        </Slide>
+        <Slide>
+          <ImgContainer>
+            <Image
+              src="https://www.superkicks.in/cdn/shop/files/LIL_NAS_X_CROCS_-LEFT_4892c0f3-3a97-40b9-8add-3f278447e6d0.png?v=1703780220"
+              alt="Slide 4"
+            />
+            <ShowNowButton onClick={redirectToProductPage}>SHOP NOW</ShowNowButton>
+          </ImgContainer>
+        </Slide>
+        <Slide>
+          <ImgContainer>
+            <Image
+              src="https://www.superkicks.in/cdn/shop/files/AIR_JORDAN_6_RETRO.jpg?v=1707399240"
+              alt="Slide 5"
             />
             <ShowNowButton onClick={redirectToProductPage}>SHOP NOW</ShowNowButton>
           </ImgContainer>

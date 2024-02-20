@@ -68,7 +68,7 @@ const AddProduct = () => {
     brandName: '',
     img: '',
     category: '',
-    size: [], // Initialize size as an empty array
+    size: [],
     price: '',
     inStock: true,
   });
@@ -78,14 +78,18 @@ const AddProduct = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: name === 'size' ? value.split(',') : value, // Split the sizes into an array
+      [name]: name === 'size' ? value.split(',').map((s) => s.trim()).filter(Boolean) : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isNaN(formData.price) || formData.price <= 0) {
+      setMessage('Price must be a positive number.');
+      return;
+    }
     try {
       const response = await fetch('http://localhost:3000/api/products/', {
         method: 'POST',
@@ -113,7 +117,7 @@ const AddProduct = () => {
 
   return (
     <FormContainer>
-      <ToastContainer/>
+      <ToastContainer />
       <Title>Add New Product</Title>
       <Form onSubmit={handleSubmit}>
         <Label>Product Name:</Label>
@@ -125,11 +129,11 @@ const AddProduct = () => {
         <Label>Image URL:</Label>
         <Input type="text" name="img" value={formData.img} onChange={handleChange} required />
 
+        <Label>Category:</Label>
         <Select name="category" value={formData.category} onChange={handleChange} required>
           <option value="">Select Category</option>
-          {['sneaker', 'sneaker care'].map((category, index) => (
-            <option key={index} value={category}>{category}</option>
-          ))}
+          <option value="sneaker">Sneaker</option>
+          <option value="sneaker care">Sneaker Care</option>
         </Select>
 
         <Label>Size (Separate with commas):</Label>
@@ -139,7 +143,7 @@ const AddProduct = () => {
         <Input type="number" name="price" value={formData.price} onChange={handleChange} required />
 
         <Label>In Stock:</Label>
-        <Select name="inStock" value={formData.inStock} onChange={handleChange} required>
+        <Select name="inStock" value={formData.inStock.toString()} onChange={handleChange} required>
           <option value="true">Yes</option>
           <option value="false">No</option>
         </Select>

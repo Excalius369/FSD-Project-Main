@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiUsers, FiBox, FiHome, FiLogOut } from 'react-icons/fi'; // Import Feather icons
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link, useNavigate } from 'react-router-dom'; // Import Link for navigation
+import { useDispatch } from 'react-redux';
+import { setLoggedOut } from '../../src/redux/store';
 
 const palette = {
   purple: '#301E67',
@@ -65,9 +67,15 @@ const LogoutButton = styled.button`
 `;
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = () => {
-    // Perform logout logic here
-    console.log('Logging out...');
+    // Clear session storage
+    sessionStorage.clear();
+    // Dispatch the action to set the user as logged out
+    dispatch(setLoggedOut());
+    // Redirect to the login page
+    navigate('/login');
   };
 
   return (

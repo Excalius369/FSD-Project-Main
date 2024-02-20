@@ -136,7 +136,6 @@ const ProceedToBuyButton = styled.button`
     background-color: #006400; /* Darker Green */
   }
 `;
-
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
@@ -144,7 +143,8 @@ const Cart = () => {
   useEffect(() => {
     const userId = getUserId();
     if (userId) {
-      dispatch(fetchCartItems(userId)); // Fetch cart items for the user
+      dispatch(fetchCartItems(userId)) // Dispatch fetchCartItems action creator with userId
+        .catch(error => console.error("Error fetching cart items:", error)); // Handle potential errors
     }
   }, [dispatch]);
 
@@ -178,7 +178,7 @@ const Cart = () => {
     }
   
     return cart.products.reduce(
-      (total, product) => total + product.price * product.quantity,
+      (total, product) => total + product.product.price * product.product.quantity,
       0
     ).toFixed(2);
   };
@@ -209,14 +209,15 @@ const Cart = () => {
           {cart.products && cart.products.map((product, index) => (
             <ProductContainer key={index}>
               <GridItem>
-                <ProductImage src={product.img && product.img[0]} alt={product.name} />
+              <ProductImage src={product.product.img} alt={product.product.name} />
 
                 <ProductDetails>
                   <h3 style={{ color: '#3d5a80', fontSize: '20px' }}>
-                    {product.name}
+                  {product.product.name}
                   </h3>
-                  <p>${product.price}</p>
-                  <p>{product.description}</p>
+                  <p> {product.product.brandName}</p>
+                  <p>₹{product.product.price}</p>
+                  
                 </ProductDetails>
                 <QuantityContainer>
                   <StepperContainer>
@@ -230,7 +231,7 @@ const Cart = () => {
                     <QuantityDisplay>{product.quantity}</QuantityDisplay>
                     <StepperButton
                       onClick={() =>
-                        handleQuantityChange(product._id, product.quantity + 1)
+                        handleQuantityChange(product.id, product.quantity + 1)
                       }
                     >
                       +
@@ -243,7 +244,7 @@ const Cart = () => {
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <DeleteIcon
                     icon={faTrash}
-                    onClick={() => handleDelete(product._id)}
+                    onClick={() => handleDelete(product.id)}
                   />
                 </QuantityContainer>
               </GridItem>

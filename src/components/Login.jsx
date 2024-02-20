@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useDispatch } from 'react-redux';
 import { setLoggedIn, setAdmin } from '../redux/store'; // Import the setAdmin action
+import V2Gif from '../components/asset/V2.gif';
 
 const MySwal = withReactContent(Swal);
 const fadeIn = keyframes`
@@ -18,29 +19,18 @@ const fadeIn = keyframes`
   }
 `;
 
-const slideIn = keyframes`
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
-
 const LoginPageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: url('https://images.unsplash.com/photo-1628558422453-576457df4b0d?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+  background: url(${V2Gif}) no-repeat center center fixed;
   background-size: cover;
 `;
 
 const LoginForm = styled.form`
   background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 20px; /* Pebble corners */
+  border-radius: 20px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   padding: 30px;
   width: 400px;
@@ -107,7 +97,6 @@ const Login = () => {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (data.success) {
         sessionStorage.setItem('isLoggedIn', true);
@@ -117,8 +106,8 @@ const Login = () => {
         dispatch(setLoggedIn(true));
 
         if (data.isAdmin) {
-          dispatch(setAdmin(true)); // Set isAdmin to true in Redux store
-          navigate('/dashboard'); // Redirect to admin dashboard
+          dispatch(setAdmin(true));
+          navigate('/dashboard');
           MySwal.fire({
             icon: 'success',
             title: 'Welcome Admin!',
@@ -127,18 +116,12 @@ const Login = () => {
               <p style="font-size: 16px; color: #fff;">Redirecting to admin dashboard...</p>
             `,
             showConfirmButton: false,
-            timer: 3000, // Auto close after 3 seconds
-            background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+            timer: 3000,
+            background: 'linear-gradient(to right, #192a56, #273c75)',
             customClass: {
               title: 'custom-title',
               container: 'custom-container',
               popup: 'custom-popup',
-            },
-            onOpen: (popup) => {
-              popup.classList.remove('animate__animated');
-              popup.classList.remove('animate__fadeIn');
-              void popup.offsetWidth; // Trigger reflow
-              popup.classList.add('animate__animated', 'animate__fadeIn');
             },
           });
         } else {
@@ -151,18 +134,12 @@ const Login = () => {
               <p style="font-size: 16px; color: #fff;">Redirecting to homepage...</p>
             `,
             showConfirmButton: false,
-            timer: 3000, // Auto close after 3 seconds
-            background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+            timer: 3000,
+            background: 'linear-gradient(to right, #192a56, #273c75)',
             customClass: {
               title: 'custom-title',
               container: 'custom-container',
               popup: 'custom-popup',
-            },
-            onOpen: (popup) => {
-              popup.classList.remove('animate__animated');
-              popup.classList.remove('animate__fadeIn');
-              void popup.offsetWidth; // Trigger reflow
-              popup.classList.add('animate__animated', 'animate__fadeIn');
             },
           });
         }
@@ -173,17 +150,11 @@ const Login = () => {
           icon: 'error',
           title: 'Login Failed!',
           text: 'Invalid username or password.',
-          background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+          background: 'linear-gradient(to right, #192a56, #273c75)',
           customClass: {
             title: 'custom-title',
             container: 'custom-container',
             popup: 'custom-popup',
-          },
-          onOpen: (popup) => {
-            popup.classList.remove('animate__animated');
-            popup.classList.remove('animate__fadeIn');
-            void popup.offsetWidth; // Trigger reflow
-            popup.classList.add('animate__animated', 'animate__fadeIn');
           },
         });
       }
@@ -194,17 +165,11 @@ const Login = () => {
         icon: 'error',
         title: 'Login Failed!',
         text: 'Failed to connect to the server. Please try again later.',
-        background: 'linear-gradient(to right, #192a56, #273c75)', // Dark blue gradient
+        background: 'linear-gradient(to right, #192a56, #273c75)',
         customClass: {
           title: 'custom-title',
           container: 'custom-container',
           popup: 'custom-popup',
-        },
-        onOpen: (popup) => {
-          popup.classList.remove('animate__animated');
-          popup.classList.remove('animate__fadeIn');
-          void popup.offsetWidth; // Trigger reflow
-          popup.classList.add('animate__animated', 'animate__fadeIn');
         },
       });
     }

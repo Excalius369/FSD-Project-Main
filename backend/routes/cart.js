@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Cart = require("../models/cart");
+const Product = require("../models/product");
 
 // POST: Add a product to the cart
 router.post("/", async (req, res) => {
@@ -21,10 +22,10 @@ router.post("/", async (req, res) => {
     }
 });
 
-// GET: Get all cart entries
+// GET: Get all cart entries with product details
 router.get("/", async (req, res) => {
     try {
-        const cartEntries = await Cart.find();
+        const cartEntries = await Cart.find().populate("product");
         res.status(200).json(cartEntries);
     } catch (err) {
         res.status(500).json(err);
@@ -58,7 +59,10 @@ router.put("/:id", async (req, res) => {
 // GET: Get cart entries by user ID
 router.get("/user/:userId", async (req, res) => {
     try {
-        const cartEntries = await Cart.find({ user: req.params.userId });
+        const cartEntries = await Cart.find({ user: req.params.userId }).populate({
+            path: "product",
+            select: "name price img brandName"  // Specify the fields you want to populate
+        });;
         res.status(200).json(cartEntries);
     } catch (err) {
         res.status(500).json(err);

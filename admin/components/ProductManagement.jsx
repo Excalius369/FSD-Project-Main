@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './Sidebar';
@@ -163,11 +162,6 @@ const ProductManagement = () => {
       </Content>
     </DashboardContainer>
   );
-};
-
-// Remove the requirement for history prop
-ProductManagement.propTypes = {
-  history: PropTypes.object,
 };
 
 export default ProductManagement;

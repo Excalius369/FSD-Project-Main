@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardMedia, CardContent, Typography, IconButton, Button } from '@mui/material';
+import { Grid, Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -13,15 +12,16 @@ const StyledCard = styled(motion(Card))`
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
-  height: 200px;
+  height: 200px; /* Adjust the height as needed */
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -60,8 +60,7 @@ const ProductCard = ({ shoe }) => (
     <StyledCard
       variants={cardVariants}
       initial="offscreen"
-      whileInView="onscreen"
-      viewport={{ once: true }}
+      animate="onscreen"
       whileHover={hoverAnimation}
     >
       <StyledCardMedia component="img" image={shoe.img} alt={shoe.name} />
@@ -73,14 +72,9 @@ const ProductCard = ({ shoe }) => (
         <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold', marginBottom: '16px' }}>
           ₹{shoe.price}
         </Typography>
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <IconButton>
-            <FavoriteBorderOutlinedIcon style={{ color: '#ff4e50' }} />
-          </IconButton>
-          <Button component={Link} to={`/product/${shoe._id}`} variant="contained" color="primary" style={{ borderRadius: '20px' }}>
-            View Product
-          </Button>
-        </div>
+        <Button component={Link} to={`/product/${shoe._id}`} variant="contained" color="primary" style={{ borderRadius: '20px' }}>
+          View Product
+        </Button>
       </StyledCardContent>
     </StyledCard>
   </Grid>
@@ -100,7 +94,7 @@ const GridComponent = () => {
         throw new Error('Failed to fetch products');
       }
       const data = await response.json();
-      setProducts(data.slice(0, 6));
+      setProducts(data.slice(0, 6)); // Limit to the first 6 products
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to fetch products');
