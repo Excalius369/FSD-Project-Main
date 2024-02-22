@@ -100,7 +100,7 @@ const PayNowButton = styled.button`
 const OrderPlacementPage = () => {
   const [product, setProduct] = useState(null);
   const [deliveryInfo, setDeliveryInfo] = useState({
-    name: '',
+    name: '', // Corrected from username
     address: '',
     contact: '',
   });
@@ -130,7 +130,7 @@ const OrderPlacementPage = () => {
       .then(response => response.json())
       .then(data => {
         setDeliveryInfo({
-          username: data.username,
+          name: data.username, // Corrected from username
           address: data.address,
           contact: '', // Leave contact number empty initially
         });
@@ -184,7 +184,7 @@ const OrderPlacementPage = () => {
         <h2>Delivery Information</h2>
         <FormGroup>
           <Label htmlFor="name">Name:</Label>
-          <Input type="text" id="username" name="username" value={deliveryInfo.username} onChange={handleDeliveryInfoChange} required />
+          <Input type="text" id="username" name="username" value={deliveryInfo.name} onChange={handleDeliveryInfoChange} required />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="address">Address:</Label>

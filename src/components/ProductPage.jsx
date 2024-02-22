@@ -134,11 +134,17 @@ const ProductPage = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const navigate = useNavigate();
 
+
+
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/products/${id}`);
-        setProduct(response.data);
+        setProduct(response.data); // Assuming the response.data includes properties like name, brandName, price, and img
+        
+        // Store product ID in session storage
+        sessionStorage.setItem('productId', response.data._id);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -146,7 +152,6 @@ const ProductPage = () => {
 
     fetchProduct();
   }, [id]);
-
   const getUserId = () => {
     return sessionStorage.getItem('userId');
   };
@@ -168,7 +173,7 @@ const ProductPage = () => {
 
     if (product && storedProductId) {
       try {
-        await axios.post('http://localhost:3000/api/cart', {
+        await axios.post('http://localhost:3000/api/cart/', {
           user: getUserId(),
           product: storedProductId,
           quantity: quantity,
