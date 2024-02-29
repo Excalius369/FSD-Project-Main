@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Swal from 'sweetalert2';
-import PaymentForm from './PaymentForm'; // Importing the PaymentForm component
+import PaymentForm from './PaymentForm';
 
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Header = styled.h1`
   text-align: center;
   margin-bottom: 30px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 `;
 
 const OrderSummary = styled.div`
@@ -20,6 +25,8 @@ const OrderSummary = styled.div`
   margin-bottom: 30px;
   display: flex;
   align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
 `;
 
 const ProductImage = styled.img`
@@ -36,12 +43,16 @@ const ProductDetails = styled.div`
 const ProductTitle = styled.h2`
   margin: 0;
   font-size: 24px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 `;
 
 const ProductPrice = styled.p`
   margin: 10px 0;
   font-size: 20px;
   font-weight: bold;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 `;
 
 const DeliveryForm = styled.form`
@@ -55,11 +66,23 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 5px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #4caf50;
+  }
 `;
 
 const PaymentMethod = styled.div`
@@ -89,11 +112,24 @@ const pulseAnimation = keyframes`
 `;
 
 const PayNowButton = styled.button`
-  padding: 10px 20px;
+  padding: 15px 30px;
   background-color: #4caf50;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
   animation: ${pulseAnimation} 0.5s linear;
 `;
 

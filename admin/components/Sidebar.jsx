@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiUsers, FiBox, FiHome, FiLogOut } from 'react-icons/fi'; // Import Feather icons
+import { FiUsers, FiBox, FiHome, FiLogOut, FiShoppingBag } from 'react-icons/fi'; // Import Feather icons
 import { Link, useNavigate } from 'react-router-dom'; // Import Link for navigation
 import { useDispatch } from 'react-redux';
 import { setLoggedOut } from '../../src/redux/store';
@@ -15,32 +15,30 @@ const palette = {
 
 const SidebarContainer = styled.div`
   flex: 1;
-  padding: 2rem ; /* Adjusted padding */
+  padding: 2rem;
   min-height: 100vh;
   background: ${palette.purple};
-  max-width: 300px; /* Adjust the width as needed */
-  padding-top: 0; /* Removed top padding */
+  max-width: 300px;
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-  margin-top:-5px;
+  margin-top: -5px; /* Move up to align with the main content */
 `;
 
 const Title = styled.h2`
-  font-size: 2rem; /* Updated font size */
+  font-size: 2rem;
   color: ${palette.yellow};
   margin-bottom: 2rem;
-  margin-top:30px;
-
+  margin-top: 30px;
 `;
 
 const OptionLink = styled(Link)`
   display: flex;
   align-items: center;
-  font-size: 1.1rem; /* Updated font size */
+  font-size: 1.1rem;
   color: ${palette.grey};
-
   text-decoration: none;
   margin-bottom: 1.5rem;
   transition: 0.3s;
+
   &:hover {
     color: #fff;
   }
@@ -53,7 +51,7 @@ const Icon = styled.span`
 const LogoutButton = styled.button`
   display: flex;
   align-items: center;
-  font-size: 1.1rem; /* Updated font size */
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.8);
   background: none;
   border: none;
@@ -69,6 +67,7 @@ const LogoutButton = styled.button`
 const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     // Clear session storage
     sessionStorage.clear();
@@ -87,11 +86,15 @@ const Sidebar = () => {
       </OptionLink>
       <OptionLink to="/user-management">
         <Icon><FiUsers /></Icon>
-        Manage User
+        Manage Users
       </OptionLink>
       <OptionLink to="/product-management">
         <Icon><FiBox /></Icon>          
-        Manage Product
+        Manage Products
+      </OptionLink>
+      <OptionLink to="/order-management">
+        <Icon><FiShoppingBag /></Icon>
+        Manage Orders
       </OptionLink>
       <LogoutButton onClick={handleLogout}>
         <Icon><FiLogOut /></Icon>
@@ -100,4 +103,5 @@ const Sidebar = () => {
     </SidebarContainer>
   );
 };
+
 export default Sidebar;

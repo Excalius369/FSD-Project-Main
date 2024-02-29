@@ -3,7 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { fetchCartItems } from '../redux/cartActions'; // Import fetchCartItems action creator
+import { fetchCartItems, removeCartItem, updateCartItem } from '../redux/cartActions';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 60%;
@@ -136,59 +138,73 @@ const ProceedToBuyButton = styled.button`
     background-color: #006400; /* Darker Green */
   }
 `;
+
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const navigate = useNavigate();
+  
 
-  useEffect(() => {
-    const userId = getUserId();
-    if (userId) {
-      dispatch(fetchCartItems(userId)) // Dispatch fetchCartItems action creator with userId
-        .catch(error => console.error("Error fetching cart items:", error)); // Handle potential errors
-    }
-  }, [dispatch]);
-
-  // Define getUserId function before its usage
+  // Move getUserId function declaration here
   const getUserId = () => {
     const userId = sessionStorage.getItem('userId');
     console.log('User ID retrieved:', userId);
-    return userId; // Return null if userId is not found in sessionStorage
+    return userId;
   };
 
-  const handleQuantityChange = (productId, newQuantity) => {
-    // Dispatch an action to update the quantity in the Redux store
-    // You need to define the 'UPDATE_QUANTITY' action type in your Redux actions and reducers
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, newQuantity } });
+  useEffect(() => {
+    const userId = getUserId(); // Call getUserId here
+    if (userId) {
+      dispatch(fetchCartItems(userId))
+        .catch(error => console.error("Error fetching cart items:", error));
+    }
+  }, [dispatch]);
+
+  const handleQuantityChange = (cartItemId, newQuantity) => {
+    dispatch(updateCartItem({ cartItemId: cartItemId, updatedData: { quantity: newQuantity } }));
   };
 
   const handleDelete = (productId) => {
-    // Dispatch an action to remove the product from the Redux store
-    // You need to define the 'REMOVE_PRODUCT' action type in your Redux actions and reducers
-    dispatch({ type: 'REMOVE_PRODUCT', payload: { productId } });
-  };
-
-  const handleBuyNow = (product) => {
-    console.log(`Buying ${product.quantity} ${product.name}(s)`);
-    // Add your logic for handling the buy now action
+    dispatch(removeCartItem(productId))
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Product Removed',
+          text: 'The product has been successfully removed from your cart.',
+        });
+      })
+      .catch(error => {
+        console.error('Error removing product from cart:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while removing the product from your cart. Please try again.',
+        });
+      });
   };
 
   const calculateSubtotal = () => {
     if (!cart || !cart.products) {
-      return 0; // or any default value you prefer
+      return 0;
     }
   
     return cart.products.reduce(
-      (total, product) => total + product.product.price * product.product.quantity,
+      (total, product) =>
+        total + product.product.price * product.quantity,
       0
-    ).toFixed(2);
+    );
   };
 
   const cartItemCount = cart.products ? cart.products.length : 0;
 
+  const handleProceedToBuy = () => {
+    navigate('/cart-order-placement', { state: { products: cart.products, subtotal: calculateSubtotal() } });
+  };
+
   return (
     <Container>
       <Header>
-        <h1 style={{ color: '#3d5a80', fontSize: '24px' }}>Welcome to Cart</h1>
+        <h1 style={{ color: '#3d5a80', fontSize: '24px' }}>Welcome to Cart</h1> 
       </Header>
       {cart && cart.products && cart.products.length === 0 ? (
         <div style={{ textAlign: 'center' }}>
@@ -202,22 +218,23 @@ const Cart = () => {
           <Subtotal>
             <strong>Subtotal: &#x20B9;{calculateSubtotal()}</strong>
           </Subtotal>
-          <ProceedToBuyButton style={{ fontSize: '16px' }}>
+          <ProceedToBuyButton
+            style={{ fontSize: '16px' }}
+            onClick={handleProceedToBuy}
+          >
             Proceed to Buy ({cartItemCount} items)
           </ProceedToBuyButton>
           <br />
           {cart.products && cart.products.map((product, index) => (
             <ProductContainer key={index}>
               <GridItem>
-              <ProductImage src={product.product.img} alt={product.product.name} />
-
+                <ProductImage src={product.product.img} alt={product.product.name} />
                 <ProductDetails>
                   <h3 style={{ color: '#3d5a80', fontSize: '20px' }}>
-                  {product.product.name}
+                    {product.product.name}
                   </h3>
-                  <p> {product.product.brandName}</p>
+                  <p>{product.product.brandName}</p>
                   <p>₹{product.product.price}</p>
-                  
                 </ProductDetails>
                 <QuantityContainer>
                   <StepperContainer>
@@ -231,20 +248,16 @@ const Cart = () => {
                     <QuantityDisplay>{product.quantity}</QuantityDisplay>
                     <StepperButton
                       onClick={() =>
-                        handleQuantityChange(product.id, product.quantity + 1)
+                        handleQuantityChange(product._id, product.quantity + 1)
                       }
                     >
                       +
                     </StepperButton>
                   </StepperContainer>
                   &nbsp;&nbsp;
-                  <BuyNowButton onClick={() => handleBuyNow(product)}>
-                    Buy Now
-                  </BuyNowButton>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <DeleteIcon
                     icon={faTrash}
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDelete(product._id)}
                   />
                 </QuantityContainer>
               </GridItem>

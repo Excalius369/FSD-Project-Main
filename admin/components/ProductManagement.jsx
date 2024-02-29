@@ -7,59 +7,56 @@ import { useNavigate } from 'react-router-dom';
 
 const DashboardContainer = styled.div`
   display: flex;
-  margin-top: 0px;
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(to right, #667eea, #764ba2);
+  background-color: #1a1a2e; /* Dark blue background color */
   min-height: 100vh;
+  color: white; /* White text color */
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 20px;
-  border-radius: 20px;
-  background-color: #fff;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
 `;
 
 const PageTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748; /* Dark blue-gray text */
   margin-bottom: 2rem;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #262b3e; /* Darker background color */
   border-radius: 10px;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  max-width: 100%; /* Ensure table does not exceed container width */
-  display: block; /* Enable vertical scrolling */
+  overflow-x: auto;
+  display: block;
 `;
 
 const Th = styled.th`
   padding: 1.5rem;
-  background: #4a90e2; /* Blue background */
+  background: #4a90e2;
   font-weight: 700;
-  color: #fff; /* White text */
+  color: white; /* White text color */
   text-align: left;
-  white-space: nowrap; /* Prevent text wrapping */
 `;
 
 const Td = styled.td`
   padding: 1.5rem;
-  border-bottom: 1px solid #cbd5e0; /* Light blue-gray border */
+  border-bottom: 1px solid #666666; /* Lighter border color */
   font-weight: 500;
-  white-space: nowrap; /* Prevent text wrapping */
 `;
 
-const Button = styled.button`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+`;
+
+const AddButton = styled.button`
   padding: 10px 20px;
-  background-color: #fcbf49; /* Yellow background */
-  color: #2d3748; /* Dark blue-gray text */
+  background-color: #fcbf49;
+  color: #262626; /* Dark shiny color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -67,32 +64,63 @@ const Button = styled.button`
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #f3b707; /* Darker yellow on hover */
+    background-color: #f3b707;
     transform: translateY(-2px);
     opacity: 0.9;
   }
 `;
 
-const AddButton = styled(Button)`
-  float: right;
-`;
-
 const ActionButtonsContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px; /* Add gap between buttons */
+  gap: 10px;
 `;
 
-const EditButton = styled(Button)``;
+const EditButton = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
 
-const DeleteButton = styled(Button)`
-  background-color: #e53e3e; /* Red background */
-  color: #fff; /* White text */
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const DeleteButton = styled.button`
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #da190b;
+  }
+`;
+
+const ProductImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+`;
+
+const ProductName = styled.span`
+  color: white; /* White text color */
 `;
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate(); // Use useNavigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -130,7 +158,9 @@ const ProductManagement = () => {
       <Sidebar />
       <Content>
         <PageTitle>Manage Products</PageTitle>
-        <AddButton onClick={() => navigate('/add-product')}>Add Product</AddButton>
+        <ButtonContainer>
+          <AddButton onClick={() => navigate('/add-product')}>Add Product</AddButton>
+        </ButtonContainer>
         <Table>
           <thead>
             <tr>
@@ -144,10 +174,13 @@ const ProductManagement = () => {
           <tbody>
             {products.map((product) => (
               <tr key={product._id}>
-                <Td>{product.name}</Td>
+                <Td>
+                  <ProductImage src={product.img} alt={product.name} />
+                  <ProductName>{product.name}</ProductName>
+                </Td>
                 <Td>{product.brandName}</Td>
-                <Td>₹{product.price}</Td> {/* Added dollar sign for price */}
-                <Td>{product.category}</Td> {/* Added Category column */}
+                <Td>₹{product.price}</Td>
+                <Td>{product.category}</Td>
                 <Td>
                   <ActionButtonsContainer>
                     <EditButton onClick={() => navigate(`/edit-product/${product._id}`)}>Edit</EditButton>

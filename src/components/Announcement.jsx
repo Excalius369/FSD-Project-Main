@@ -31,7 +31,7 @@ const Announcement = () => {
   return (
     <Container>
       <AnnouncementText>
-        🌟 Super Deal! Free Shipping on Orders Over $50 🌟
+        🌟 Super Deal! Free Shipping on Orders Over ₹350/-🌟
       </AnnouncementText>
     </Container>
   );

@@ -125,7 +125,7 @@ const Login = () => {
             },
           });
         } else {
-          navigate('/');
+          navigate('/dashboard');
           MySwal.fire({
             icon: 'success',
             title: 'Login Successful!',

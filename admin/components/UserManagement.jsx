@@ -6,32 +6,26 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const DashboardContainer = styled.div`
   display: flex;
-  margin-top: 1px;
-  font-family: 'Poppins', sans-serif;
-  background: #f2f4f8; /* Updated background color */
-  min-height: 100vh;
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 20px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  background: #1a1a2e; /* Dark blue background color */
+  color: #fff;
 `;
 
 const PageTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
-  color: #333; /* Updated text color */
+  color: #2d3748; /* Dark blue-gray text */
   margin-bottom: 2rem;
-  /* Added text transformation */
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: #262b3e; /* Darker background color */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow-x: auto;
@@ -40,22 +34,22 @@ const Table = styled.table`
 
 const Th = styled.th`
   padding: 1rem;
-  background: #4a90e2;
+  background: #4a90e2; /* Blue background */
   font-weight: 700;
-  color: #fff;
+  color: #fff; /* White text */
   text-align: left;
 `;
 
 const Td = styled.td`
   padding: 1rem;
-  border-bottom: 1px solid #cbd5e0;
+  border-bottom: 1px solid #666666; /* Lighter border color */
   font-weight: 500;
 `;
 
 const Button = styled.button`
   padding: 10px 20px;
-  background-color: #6c63ff; /* Updated button background color */
-  color: #fff;
+  background-color: #fcbf49; /* Yellow background */
+  color: #2d3748; /* Dark blue-gray text */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -63,14 +57,15 @@ const Button = styled.button`
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #544dff; /* Updated button hover background color */
+    background-color: #f3b707; /* Darker yellow on hover */
     transform: translateY(-2px);
     opacity: 0.9;
   }
 `;
 
 const DeleteButton = styled(Button)`
-  border-radius: 20px;
+  background-color: #e53e3e; /* Red background */
+  color: #fff; /* White text */
 `;
 
 const UserManagement = () => {

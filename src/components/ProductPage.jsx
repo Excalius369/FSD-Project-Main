@@ -5,6 +5,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { addProductToCart } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateCartItem } from '../redux/cartActions';
 
 const Container = styled.div`
   display: flex;
@@ -132,6 +133,7 @@ const ProductPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const cart = useSelector(state => state.cart); // Retrieve cart data from Redux store
   const navigate = useNavigate();
 
 
@@ -173,15 +175,32 @@ const ProductPage = () => {
 
     if (product && storedProductId) {
       try {
-        await axios.post('http://localhost:3000/api/cart/', {
-          user: getUserId(),
-          product: storedProductId,
-          quantity: quantity,
-          size: size,
-        });
-        
-        dispatch(addProductToCart({ userId: getUserId(), productId: storedProductId }));
-        
+        // Check if the product is already in the cart
+        const cartItem = cart.products.find(item => item.product._id === storedProductId);
+  
+        if (cartItem) {
+          // If the product is in the cart, update the quantity
+          const updatedQuantity = cartItem.quantity + quantity;
+  
+          // Update the quantity in the cart
+          await axios.put(`http://localhost:3000/api/cart/${cartItem._id}`, {
+            quantity: updatedQuantity,
+          });
+  
+          // Update the quantity in the Redux store
+          dispatch(updateCartItem({ cartItemId: cartItem._id, updatedData: { quantity: updatedQuantity } }));
+        } else {
+          // If the product is not in the cart, add it to the cart
+          await axios.post('http://localhost:3000/api/cart/', {
+            user: getUserId(),
+            product: storedProductId,
+            quantity: quantity,
+            size: size,
+          });
+  
+          // Add the product to the Redux store
+          dispatch(addProductToCart({ userId: getUserId(), productId: storedProductId }));
+        }
         Swal.fire({
           icon: 'success',
           title: 'Product added to cart!',

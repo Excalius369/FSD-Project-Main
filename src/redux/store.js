@@ -34,7 +34,7 @@ export const fetchCartItems = createAsyncThunk(
       return response.data; // Return the fetched data
     } catch (error) {
       thunkAPI.dispatch(fetchCartItemsFailure(error.message));  // Dispatch the failure action
-      return thunkAPI.rejectWithValue(error.message);
+      throw error;
     }
   }
 );
@@ -95,7 +95,7 @@ export const addProductToCart = createAsyncThunk(
       });
       return response.data; // Return the updated cart data
     } catch (error) {
-      throw new Error(error.message);
+      throw error;
     }
   }
 );

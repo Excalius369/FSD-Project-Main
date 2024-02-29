@@ -57,13 +57,21 @@ router.get("/:id", async (req, res) => {
 
 // GET: Get all products or filter by query parameters
 router.get("/", async (req, res) => {
-    const { new: qNew, category: qCategory } = req.query;
+    const { new: qNew, category: qCategory, search } = req.query;
     try {
         let products;
         if (qNew) {
             products = await Product.find().sort({ createdAt: -1 }).limit(1);
         } else if (qCategory) {
             products = await Product.find({ category: qCategory });
+        } else if (search) {
+            const regex = new RegExp(search, 'i'); // Case-insensitive search
+            products = await Product.find({
+                $or: [
+                    { name: regex },
+                    { brandName: regex }
+                ]
+            });
         } else {
             products = await Product.find();
         }
@@ -73,14 +81,18 @@ router.get("/", async (req, res) => {
     }
 });
 
-// GET: Get total number of products
+// Define route to get the total number of products
 router.get('/total', async (req, res) => {
     try {
-        const totalProducts = await Product.countDocuments();
-        res.status(200).json({ totalProducts });
+      // Count all products in the database
+      const totalProducts = await Product.countDocuments();
+  
+      // Respond with the total number of products
+      res.status(200).json({ totalProducts });
     } catch (error) {
-        console.error('Error fetching total number of products:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      // Handle errors
+      console.error('Error fetching total number of products:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 

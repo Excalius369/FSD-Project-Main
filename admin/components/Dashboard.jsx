@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FiUsers, FiBox, FiHome, FiLogOut } from 'react-icons/fi'; // Import Feather icons
+import { FiUsers, FiBox, FiHome, FiLogOut, FiShoppingBag } from 'react-icons/fi'; // Import Feather icons
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate for navigation
 import { useDispatch } from 'react-redux'; // Import useDispatch for Redux
 import { setLoggedOut } from '../../src/redux/store';
-
 
 const palette = {
   purple: '#301E67',
   peach: '#FFB647',
   yellow: '#FAD400',
   grey: '#EDEDED',
-  black: '#1D1D1D'
+  black: '#1D1D1D',
+  darkBlue: '#1a1a2e' // New dark blue color
 };
 
 const DashboardContainer = styled.div`
@@ -27,14 +27,12 @@ const Sidebar = styled.div`
 `;
 
 const Content = styled.div`
-  background: ${palette.grey};
+  background-color: ${palette.darkBlue}; /* Updated background color */
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   flex: 5;
   padding: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  color: #fff; /* Updated font color */
 `;
 
 const Title = styled.h2`
@@ -63,12 +61,17 @@ const Icon = styled.span`
   margin-right: 1rem;
 `;
 
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+`;
+
 const Card = styled.div`
   background: #fff;
   border-radius: 0.5rem;
   box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
 `;
 
 const CardTitle = styled.h3`
@@ -107,30 +110,31 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
-
   const fetchStatistics = async () => {
     try {
-      const userResponse = await fetch('http://localhost:3000/api/users/total');
-      const productResponse = await fetch('http://localhost:3000/api/products/total');
-
-      if (!userResponse.ok || !productResponse.ok) {
-        throw new Error('Failed to fetch statistics');
+      const usersResponse = await fetch('http://localhost:3000/api/user/total');
+      if (!usersResponse.ok) {
+        throw new Error('Failed to fetch total users');
       }
-
-      const userData = await userResponse.json();
-      const productData = await productResponse.json();
-
+      const userData = await usersResponse.json();
       setUserStats(userData.totalUsers);
+  
+      const productsResponse = await fetch('http://localhost:3000/api/product/total');
+      if (!productsResponse.ok) {
+        throw new Error('Failed to fetch total products');
+      }
+      const productData = await productsResponse.json();
       setProductStats(productData.totalProducts);
     } catch (error) {
-      console.error('Error fetching statistics:', error);
+      console.error('Error fetching total counts:', error);
       setUserStats('Error');
       setProductStats('Error');
     }
   };
+  
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
 
   const handleLogout = () => {
     // Clear session storage
@@ -138,9 +142,9 @@ const Dashboard = () => {
     // Dispatch the action to set the user as logged out
     dispatch(setLoggedOut());
     // Redirect to the login page and replace the current entry in the history stack
-    window.location.replace('/login');
+    navigate('/login', { replace: true });
   };
-  
+
   return (
     <DashboardContainer>
       <Sidebar>
@@ -157,6 +161,10 @@ const Dashboard = () => {
           <Icon><FiBox /></Icon>
           Manage Product
         </OptionLink>
+        <OptionLink to="/order-management">
+          <Icon><FiShoppingBag /></Icon>
+          Manage Orders
+        </OptionLink>
         <LogoutButton onClick={handleLogout}>
           <Icon><FiLogOut /></Icon>
           Logout
@@ -166,14 +174,16 @@ const Dashboard = () => {
         <div>
           <h1>Welcome, Admin!</h1>
           <p>Select an option from the sidebar to manage users or products.</p>
-          <Card>
-            <CardTitle>User Statistics</CardTitle>
-            <CardContent>Total Users: <span style={{ color: palette.black }}>{userStats !== null ? userStats : 'Loading...'}</span></CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Product Statistics</CardTitle>
-            <CardContent>Total Products: <span style={{ color: palette.black }}>{productStats !== null ? productStats : 'Loading...'}</span></CardContent>
-          </Card>
+          <CardGrid>
+            <Card>
+              <CardTitle>User Statistics</CardTitle>
+              <CardContent>Total Users: <span style={{ color: palette.black }}>{userStats !== null ? userStats : 'Loading...'}</span></CardContent>
+            </Card>
+            <Card>
+              <CardTitle>Product Statistics</CardTitle>
+              <CardContent>Total Products: <span style={{ color: palette.black }}>{productStats !== null ? productStats : 'Loading...'}</span></CardContent>
+            </Card>
+          </CardGrid>
         </div>
       </Content>
     </DashboardContainer>
