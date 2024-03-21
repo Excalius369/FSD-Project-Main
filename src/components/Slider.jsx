@@ -109,7 +109,7 @@ const Slider = () => {
   };
 
   const redirectToProductPage = () => {
-    navigate('/product');
+    navigate('/footwears');
   };
 
   return (
